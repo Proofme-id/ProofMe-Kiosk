@@ -6,6 +6,13 @@ Currently runs with:
 - Electron v9.1.0
 - Electron Builder v22.7.0
 
+## Build a snap
+Execute 'snapcraft' to build a kiosk snap.
+
+``` bash
+snapcraft
+```
+
 ## Getting Started
 
 Clone this repository locally :
