@@ -19,6 +19,7 @@ function createWindow() {
             allowRunningInsecureContent: (serve) ? true : false,
         },
     });
+    electron_1.Menu.setApplicationMenu(null);
     if (serve) {
         win.webContents.openDevTools();
         require('electron-reload')(__dirname, {

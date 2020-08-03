@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "proofme-kiosk": {
+    "proofme": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -84,24 +84,24 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "angular-electron:build"
+            "browserTarget": "proofme:build"
           },
           "configurations": {
             "dev": {
-              "browserTarget": "angular-electron:build:dev"
+              "browserTarget": "proofme:build:dev"
             },
             "web": {
-              "browserTarget": "angular-electron:build:web"
+              "browserTarget": "proofme:build:web"
             },
             "production": {
-              "browserTarget": "angular-electron:build:production"
+              "browserTarget": "proofme:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular-electron:build"
+            "browserTarget": "proofme:build"
           }
         },
         "test": {
@@ -139,7 +139,7 @@
         }
       }
     },
-    "proofme-kiosk-e2e": {
+    "proofme-e2e": {
       "root": "e2e",
       "projectType": "application",
       "architect": {
@@ -161,7 +161,7 @@
   "cli": {
     "analytics": false
   },
-  "defaultProject": "angular-electron",
+  "defaultProject": "proofme",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

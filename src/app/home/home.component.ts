@@ -10,6 +10,7 @@ export class HomeComponent implements OnInit {
 
   // Status
   // 0 = default
+  // 1 = processing
   // 2 = error
   // 3 = success
   public status;

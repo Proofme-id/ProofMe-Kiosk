@@ -13,6 +13,17 @@ Execute 'snapcraft' to build a kiosk snap.
 snapcraft
 ```
 
+## Release a snap
+``` bash
+snapcraft login
+snapcraft upload --release=stable proofme-kiosk_<version>_amd64.snap
+```
+
+## Install a snap
+``` bash
+sudo snap install proofme-kiosk
+```
+
 ## Getting Started
 
 Clone this repository locally :
