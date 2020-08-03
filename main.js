@@ -14,12 +14,12 @@ function createWindow() {
         y: 0,
         width: size.width,
         height: size.height,
+        frame: false,
         webPreferences: {
             nodeIntegration: true,
             allowRunningInsecureContent: (serve) ? true : false,
         },
     });
-    electron_1.Menu.setApplicationMenu(null);
     if (serve) {
         win.webContents.openDevTools();
         require('electron-reload')(__dirname, {
