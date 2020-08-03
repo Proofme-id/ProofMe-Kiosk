@@ -1,0 +1,13 @@
+{
+  "PAGES": {
+      "HOME": {
+          "TITLE": "ProofMe Kiosk",
+          "TITLE2": "Secure, Easy and Privacy-proof",
+          "ERROR": "ERROR",
+          "SUCCESS": "SUCCESS"
+      },
+      "CONFIG": {
+        "TITLE": "Configuration"
+    }
+  }
+}

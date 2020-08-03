@@ -1,0 +1,24 @@
+
+<div class="container" *ngIf="status == 0">
+  <img src="./assets/images/proofme.ID-white.png">
+  <h1 class="title" (click)="setStatus(2)">
+    {{ 'PAGES.HOME.TITLE' | translate }}
+  </h1>
+  <h2 class="title" (click)="setStatus(3)">
+    {{ 'PAGES.HOME.TITLE2' | translate }}
+  </h2>
+</div>
+
+<div class="container error" *ngIf="status == 2">
+  <fa-icon class="info-icon" [icon]="['fas', 'times']" size="10x"></fa-icon>
+  <h1 class="title" (click)="setStatus(0)">
+    {{ 'PAGES.HOME.ERROR' | translate }}
+  </h1>
+</div>
+
+<div class="container success" *ngIf="status == 3">
+  <fa-icon class="info-icon" [icon]="['fas', 'check']" size="10x"></fa-icon>
+  <h1 class="title" (click)="setStatus(0)">
+    {{ 'PAGES.HOME.SUCCESS' | translate }}
+  </h1>
+</div>

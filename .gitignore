@@ -1,0 +1,10 @@
+dist
+release
+node_modules
+
+.DS_Store
+.idea
+snap
+!snap/Dockerfile
+!snap/snapcraft.yaml
+*.snap
