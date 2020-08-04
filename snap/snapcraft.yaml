@@ -12,7 +12,6 @@ apps:
     command: bin/desktop-launch xwayland-kiosk-launch "$SNAP/proofme-kiosk/proofme" "--no-sandbox"
     slots: [ x11 ]
     plugs:
-      - browser-support
       - network
       - network-bind
       - opengl
@@ -26,7 +25,6 @@ apps:
     command: bin/desktop-launch xwayland-kiosk-launch "$SNAP/proofme-kiosk/proofme" "--no-sandbox"
     slots: [ x11 ]
     plugs:
-      - browser-support
       - network
       - network-bind
       - opengl
@@ -38,9 +36,6 @@ environment:
   XWAYLAND_FULLSCREEN_WINDOW_HINT: window_role="browser-window"
 
 plugs:
-  browser-sandbox:
-    interface: browser-support
-    allow-sandbox: true
   x11-plug:
     interface: x11
 
