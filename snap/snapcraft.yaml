@@ -67,7 +67,7 @@ parts:
       echo "NODE: $(node -v)" &&
       npm install &&
       npm run electron:build:dir &&
-      cp -v -R ./release/linux-unpacked $SNAPCRAFT_PART_INSTALL/proofme-kiosk
+      cp -v -R ./release/linux-$ARCH-unpacked $SNAPCRAFT_PART_INSTALL/proofme-kiosk
     stage-packages:
       - libasound2
       - libgconf-2-4
