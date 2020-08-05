@@ -27,7 +27,7 @@
     "electron:serve": "wait-on tcp:4200 && npm run electron:serve-tsc && npx electron . --serve",
     "electron:local": "npm run build:prod && npx electron .",
     "electron:build": "npm run build:prod && electron-builder build",
-    "electron:build:dir": "npm run build:prod && electron-builder build --linux dir --x64 --arm64 --armv7l --ia32 && mv release/linux-unpacked release/linux-x64-unpacked",
+    "electron:build:dir": "npm run build:prod && electron-builder build --linux dir",
     "electron:build:all": "npm run build:prod && electron-builder build -lmw",
     "test": "ng test --watch=false",
     "test:watch": "ng test",

@@ -9,22 +9,12 @@ grade: devel
 
 apps:
   proofme-kiosk:
-    command: bin/desktop-launch xwayland-kiosk-launch "$SNAP/proofme-kiosk/proofme" "--no-sandbox"
-    slots: [ x11 ]
-    plugs:
-      - network
-      - network-bind
-      - opengl
-      - pulseaudio
-      - wayland
-      - x11-plug
-
-  daemon:
     daemon: simple
     restart-condition: always
     command: bin/desktop-launch xwayland-kiosk-launch "$SNAP/proofme-kiosk/proofme" "--no-sandbox"
     slots: [ x11 ]
     plugs:
+      - browser-support
       - network
       - network-bind
       - opengl
@@ -62,7 +52,7 @@ parts:
       echo "NODE: $(node -v)" &&
       npm install &&
       npm run electron:build:dir &&
-      cp -v -R ./release/linux-$ARCH-unpacked $SNAPCRAFT_PART_INSTALL/proofme-kiosk
+      cp -v -R ./release/linux-unpacked $SNAPCRAFT_PART_INSTALL/proofme-kiosk
     stage-packages:
       - libasound2
       - libgconf-2-4
