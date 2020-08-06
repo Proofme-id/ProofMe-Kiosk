@@ -41,10 +41,10 @@ parts:
       - NG_CLI_ANALYTICS: "ci"
     override-build: |
       case $SNAPCRAFT_ARCH_TRIPLET in
-        "i386-linux-gnu") ARCH="ia32";;
-        "x86_64-linux-gnu") ARCH="x64";;
-        "arm-linux-gnueabihf") ARCH="armv7l";;
-        "aarch64-linux-gnu") ARCH="arm64";;
+        "i386-linux-gnu") outputDir="linux-ia32-unpacked";;
+        "x86_64-linux-gnu") outputDir="linux-unpacked";;
+        "arm-linux-gnueabihf") outputDir="linux-armv7l-unpacked";;
+        "aarch64-linux-gnu") outputDir="linux-arm64-unpacked";;
         *) echo "ERROR: electron does not support the '$SNAPCRAFT_ARCH_TRIPLET' architecture" && exit 1;;
       esac
       npm config set unsafe-perm true &&
@@ -52,7 +52,7 @@ parts:
       echo "NODE: $(node -v)" &&
       npm install &&
       npm run electron:build:dir &&
-      cp -v -R ./release/linux-unpacked $SNAPCRAFT_PART_INSTALL/proofme-kiosk
+      cp -v -R ./release/$outputDir $SNAPCRAFT_PART_INSTALL/proofme-kiosk
     stage-packages:
       - libasound2
       - libgconf-2-4
