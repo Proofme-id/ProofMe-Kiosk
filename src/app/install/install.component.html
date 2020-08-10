@@ -5,7 +5,7 @@
     {{ 'PAGES.HOME.TITLE' | translate }}
   </h1>
   <h2 class="title" (click)="setStatus(3)">
-    {{ 'PAGES.HOME.TITLE2' | translate }}
+    {{ 'PAGES.INSTALL.TITLE' | translate }}
   </h2>
 </div>
 
@@ -21,18 +21,4 @@
   <h1 class="title" (click)="setStatus(0)">
     {{ 'PAGES.HOME.SUCCESS' | translate }}
   </h1>
-</div>
-
-<div class="footer-main-div">
-  <div class="footer-left-div">
-    <fa-icon class="info-icon" [routerLink]="['home']" [icon]="['fas', 'qrcode']" size="5x"></fa-icon>
-  </div>
-
-  <div class="footer-center-div">
-
-  </div>
-
-  <div class="footer-right-div">
-    <fa-icon class="info-icon" [routerLink]="['config']" [icon]="['fas', 'cog']" size="5x"></fa-icon>
-  </div>
 </div>

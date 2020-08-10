@@ -1,0 +1,14 @@
+:host {
+  img {
+    height: auto;
+    max-width: 40%;
+  }
+
+  .container.success {
+    background: forestgreen;
+  }
+
+  .container.error {
+    background: indianred;
+  }
+}

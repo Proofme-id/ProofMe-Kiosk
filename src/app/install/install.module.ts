@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { HomeRoutingModule } from './home-routing.module';
+import { InstallRoutingModule } from './install-routing.module';
 
-import { HomeComponent } from './home.component';
+import { InstallComponent } from './install.component';
 import { SharedModule } from '../shared/shared.module';
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 
 @NgModule({
-  declarations: [HomeComponent],
+  declarations: [InstallComponent],
   imports: [
     CommonModule,
     FontAwesomeModule,
     SharedModule,
-    HomeRoutingModule
+    InstallRoutingModule
   ]
 })
-export class HomeModule {}
+export class InstallModule {}

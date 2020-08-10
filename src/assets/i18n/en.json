@@ -1,5 +1,8 @@
 {
   "PAGES": {
+      "INSTALL": {
+        "TITLE": "Installation"
+      },
       "HOME": {
           "TITLE": "ProofMe Kiosk",
           "TITLE2": "Secure, Easy and Privacy-proof",

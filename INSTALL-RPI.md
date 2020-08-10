@@ -15,7 +15,8 @@ Start by creating an Ubuntu SSO account. [register](https://login.ubuntu.com/)
 Import an SSH Key into your Ubuntu SSO account. [instructions](https://help.ubuntu.com/community/SSH/OpenSSH/Keys)
 
 # Download Core images
-[Ubuntu core 18](http://cdimage.ubuntu.com/ubuntu-core/18/stable/current/ubuntu-core-18-armhf+raspi.img.xz)
+[RPI 3](http://cdimage.ubuntu.com/ubuntu-core/18/stable/current/ubuntu-core-18-arm64+raspi3.img.xz)
+[RPI 4](http://cdimage.ubuntu.com/ubuntu-core/18/stable/current/ubuntu-core-18-arm64+raspi4.img.xz)
 
 # Flash the microSD Card
 Copy the Ubuntu image on a microSD card by following the [installation media instructions](https://ubuntu.com/download/iot/installation-media).
