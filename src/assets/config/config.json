@@ -1,0 +1,4 @@
+{
+    "authUrl": "https://auth.proofme.id",
+    "signalingWS": "wss://auth.proofme.id"
+}

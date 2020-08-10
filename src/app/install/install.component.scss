@@ -1,14 +1,33 @@
 :host {
-  img {
-    height: auto;
-    max-width: 40%;
-  }
+    img {
+        height: auto;
+        max-width: 40%;
+    }
 
-  .container.success {
-    background: forestgreen;
-  }
+    .container.success {
+        background: forestgreen;
+    }
 
-  .container.error {
-    background: indianred;
-  }
+    .container.error {
+        background: indianred;
+    }
+    
+    .qr-code-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .qr-code-text-connected {
+        padding: 20px;
+        color: green;
+        font-size: 18px;
+        border-radius: 25px;
+        background: white;
+        margin-bottom: 0;
+    }
+
+    .successfull-icon {
+        width: 150px;
+    }
 }
