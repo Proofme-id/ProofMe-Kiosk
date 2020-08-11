@@ -25,10 +25,10 @@ const routes: Routes = [
         path: 'config',
         component: ConfigComponent
     },
-    {
-        path: '**',
-        component: PageNotFoundComponent
-    }
+    // {
+    //     path: '**',
+    //     component: PageNotFoundComponent
+    // }
 ];
 
 @NgModule({

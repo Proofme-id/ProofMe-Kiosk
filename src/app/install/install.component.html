@@ -36,3 +36,11 @@
     <img src="/assets/images/success-icon.png" class="successfull-icon">
     <p class="qr-code-text-connected"><b>Successfull setup</b></p>
 </div>
+
+<!-- Error DID contract enrollment -->
+<div class="container qr-code" *ngIf="status == 7">
+    <img src="/assets/images/failed-icon.png" class="successfull-icon">
+    <br>
+    <b>Signing key was not valid</b>
+    <p class="did-failed-text" (click)="retry()"><b>Retry</b></p>
+</div>

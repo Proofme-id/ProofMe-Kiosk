@@ -7,6 +7,9 @@ import * as Smilo from '@smilo-platform/smilo-commons-js-web';
 import * as QRCode from 'qrcode';
 import * as crypto from 'crypto';
 import { ConfigProvider } from 'app/providers/configProvider';
+import Web3 from '@smilo-platform/web3';
+import ClaimHolder from '../contracts/ClaimHolder';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
     selector: 'app-install',
@@ -34,6 +37,7 @@ export class InstallComponent implements OnInit {
     signalingWS = null; // Authentication server
     connectionSuccess = false;
     waitingMenu = false;
+    kioskAdminChallenge = null;
 
     constructor(
         private router: Router,
@@ -228,7 +232,7 @@ export class InstallComponent implements OnInit {
         this.dataChannel = await this.peerConnection.createDataChannel(uuid);
 
         this.peerConnection.addEventListener('datachannel', event => {
-            event.channel.onmessage = (eventMessage => {
+            event.channel.onmessage = (async eventMessage => {
                 console.log('peerConnection dataChannel event:', eventMessage.data);
 
                 let data: any;
@@ -240,7 +244,7 @@ export class InstallComponent implements OnInit {
                     console.log('peerConnection ERROR: Invalid JSON');
                     data = {};
                 }
-                const { action, message, token, id, checkinData, kioskData } = data;
+                const { action, message, token, id, checkinData, didContractAddress, kioskAdminSignature } = data;
 
                 switch (action) {
                     // when a user tries to login
@@ -253,15 +257,40 @@ export class InstallComponent implements OnInit {
                         console.log('peerConnection share-checkin-data:', checkinData);
                         break;
                     case 'share-kiosk-data':
-                        console.log('peerConnection share-kiosk-data:', kioskData);
-                        this.storageService.set({didAddress: kioskData});
-                        this.ngZone.run(() => {
-                            this.setStatus(6);
-                            setTimeout(() => {
-                                console.log('NAVIGATE');
-                                this.router.navigate(['home']);
-                            }, 3000);
-                        })
+                        console.log('peerConnection didContractAddress:', didContractAddress);
+                        console.log('kioskAdminSignature:', kioskAdminSignature);
+                        const web3 = new Web3('https://api-eu.didux.network/');
+                        const recoveredAddress = web3.eth.accounts.recover(this.kioskAdminChallenge, kioskAdminSignature);
+                        console.log('recoveredAddress:', recoveredAddress);
+                        const sha3Key = web3.utils.keccak256(recoveredAddress);
+                        const keyManagerContract = new web3.eth.Contract(
+                            ClaimHolder.abi,
+                            didContractAddress
+                        );
+                        console.log('sha3Key:', sha3Key);
+                        const key = await keyManagerContract.methods.getKey(sha3Key).call();
+                        console.log('key:', key);
+                        if (parseInt(key.keyType, 10) === 1) {
+                            console.log('YES valid');
+                            this.storageService.set({
+                                ADMINS: [
+                                    recoveredAddress
+                                ]
+                            });
+                            this.ngZone.run(() => {
+                                this.setStatus(6);
+                                setTimeout(() => {
+                                    console.log('NAVIGATE');
+                                    this.router.navigate(['home']);
+                                }, 3000);
+                            })
+                        } else {
+                            console.log('NOT valid');
+                            this.ngZone.run(() => {
+                                this.setStatus(7);
+                            })
+                        }
+
                         break;
                     default:
                         console.log('peerConnection unknown action: ' + action);
@@ -318,9 +347,20 @@ export class InstallComponent implements OnInit {
         console.log('Request share checkin data');
         this.waitingMenu = true;
         this.did = null;
-        this.dataChannel.send(JSON.stringify({action: 'share-kiosk-data', url: this.authUrl}));
+        this.kioskAdminChallenge = this.generateChallenge(64);
+        this.dataChannel.send(JSON.stringify({action: 'share-kiosk-data', url: this.authUrl, kioskAdminChallenge: this.kioskAdminChallenge}));
         this.setStatus(5);
     }
+
+    generateChallenge(length: number) {
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+           result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+     }
 
     async disconnect() {
         // if (this.dataChannel.readyState === 'open') {
@@ -330,10 +370,16 @@ export class InstallComponent implements OnInit {
             this.connectionSuccess = false;
             this.uuid = null;
             this.waitingMenu = false;
+            this.kioskAdminChallenge = null;
         });
         await this.wsClient.close();
         await this.peerConnection.close();
         await this.launchWebsocketClient();
+    }
+
+    retry() {
+        this.setStatus(4);
+        this.disconnect();
     }
 
     getRTCConfig() {

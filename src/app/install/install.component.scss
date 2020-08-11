@@ -30,4 +30,19 @@
     .successfull-icon {
         width: 150px;
     }
+
+    .did-failed-text {
+        padding: 20px;
+        color: red;
+        font-size: 18px;
+        border-radius: 25px;
+        background: white;
+        margin-bottom: 0;
+
+        &:hover {
+            cursor: pointer;
+            background: red;
+            color: white
+        }
+    }
 }
