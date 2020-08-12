@@ -36,7 +36,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { Web3Provider } from './providers/web3Provider';
 import { EnrollComponent } from './features/enroll/enroll.component';
-
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -68,9 +69,11 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         MatInputModule,
         MatTableModule,
         MatPaginatorModule,
+        MatSlideToggleModule,
         MatSortModule,
         MatIconModule,
         MatProgressSpinnerModule,
+        MatCheckboxModule,
         MatTabsModule,
         MatSnackBarModule,
         TranslateModule.forRoot({

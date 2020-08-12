@@ -28,5 +28,16 @@ export class Web3Provider {
     getPublicKeyFromSignature(message: string, signature: string) {
         return this.web3.eth.accounts.recover(message, signature);
     }
+    
+    /**
+     * This method will get all available biometrics and sync it when someone shares his information
+     */
+    initializeWebSocket() {
+        console.log('Initialize web3 websocket!');
+        const nodeAddr = 'wss://ws-eu.didux.network';
+        const wsPort = 443;
+        const web3Socket = new Web3(new Web3.providers.WebsocketProvider(`${nodeAddr}:${wsPort}`));
+        console.log('web3Socket:', web3Socket);
+    }
 
 }

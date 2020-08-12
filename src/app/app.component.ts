@@ -5,6 +5,7 @@ import { AppConfig } from '../environments/environment';
 import { Config } from 'electron';
 import { ConfigProvider } from './providers/configProvider';
 import { StorageService } from './storage/storage.service';
+import { Web3Provider } from './providers/web3Provider';
 
 @Component({
     selector: 'app-root',
@@ -16,7 +17,8 @@ export class AppComponent {
         private electronService: ElectronService,
         private translate: TranslateService,
         private configProvider: ConfigProvider,
-        private storageService: StorageService
+        private storageService: StorageService,
+        private web3Provider: Web3Provider
     ) {
         this.translate.setDefaultLang('en');
         console.log('AppConfig', AppConfig);
@@ -29,6 +31,6 @@ export class AppComponent {
         } else {
             console.log('Run in browser');
         }
-        this.storageService.get();
+        this.web3Provider.initializeWebSocket();
     }
 }

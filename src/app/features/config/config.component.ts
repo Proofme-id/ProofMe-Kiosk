@@ -13,6 +13,7 @@ import { IAdmin } from 'app/interface/admin.interface';
 import { Web3Provider } from 'app/providers/web3Provider';
 import * as crypto from 'crypto';
 import * as QRCode from 'qrcode';
+import { IAccessManagement } from 'app/interface/access-management.interface';
 
 @Component({
     selector: 'app-config',
@@ -20,30 +21,35 @@ import * as QRCode from 'qrcode';
     styleUrls: ['./config.component.scss']
 })
 export class ConfigComponent implements OnInit {
+    // Admin 
     displayedColumns: string[] = ['publickey', 'didContractAddress', 'deleteAction'];
     tableDataSource = new MatTableDataSource([]);
     loggedIn = false;
     showNotAnAdminError = false;
-
     uuid: string = null;
-
-    // Adding an admin
     adminPublicKey: string;
     adminDidContractAddress: string;
-
     @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
     @ViewChild('qrCodeCanvas', {static: false})
     qrCodeCanvas: ElementRef;
-
     peerConnection = null;
     wsClient = null;
     dataChannel = null;
     did = null;
-    authUrl = null; // Authentication server
-    signalingWS = null; // Authentication server
+    authUrl = null;
+    signalingWS = null;
     connectionSuccess = false;
     waitingMenu = false;
     kioskAdminChallenge = null;
+
+    // System info
+
+    // Access management
+    emailEnabled = false;
+    biometricsEnabled = false;
+    phonenumberEnabled = false;
+
+    accessManagement: IAccessManagement;
 
     constructor(
         private router: Router,
@@ -54,16 +60,33 @@ export class ConfigComponent implements OnInit {
         private configProvider: ConfigProvider,
         private ngZone: NgZone
     ) {
-
+        // For debugging only!! Enable this to skip admin login
+        this.loggedIn = true;
+        this.loadConfigJson();
     }
 
     async ngOnInit(): Promise<void> {
         this.tableDataSource.paginator = this.paginator;
         this.uuid = null;
+        await this.setupAccessManagement();
         await this.configProvider.getConfig();
         this.authUrl = this.configProvider.getAuthUrl();
         this.signalingWS = this.configProvider.getSignalingWS();
-        this.launchWebsocketClient();
+        if (!this.loggedIn) {
+            this.launchWebsocketClient();
+        }
+    }
+
+    async setupAccessManagement() {
+        this.accessManagement = await this.storageService.getAccessManagement();
+        for (const identifyBy of this.accessManagement.IDENTIFY_BY) {
+            if (identifyBy === 'EMAIL') {
+                this.emailEnabled = true;
+            } else if (identifyBy === 'PHONE_NUMBER') {
+                this.phonenumberEnabled = true;
+            }
+        }
+        this.biometricsEnabled = this.accessManagement.ENABLE_FACE_RECOGNITION;
     }
 
     goToHome() {
@@ -146,6 +169,31 @@ export class ConfigComponent implements OnInit {
             });
         }
     }
+
+    identifyByChange() {
+        const identifyBy = [];
+        console.log('email:', this.emailEnabled);
+        console.log('phone:', this.phonenumberEnabled);
+        if (this.emailEnabled) {
+            identifyBy.push('EMAIL');
+        }
+        if (this.phonenumberEnabled) {
+            identifyBy.push('PHONE_NUMBER');
+        }
+        this.storageService.updateIdentifyBy(identifyBy);
+    }
+
+    biometricsChange() {
+        this.storageService.updateBiometricsEnabled(this.biometricsEnabled);
+    }
+
+
+
+    //////////////////////////////////////////////////
+    ///////////////////// WEBRTC ///////////////////// 
+    //////////////////////////////////////////////////
+
+
 
     async generateQRCode(uuid: string) {
         const canvas = this.qrCodeCanvas.nativeElement as HTMLCanvasElement;

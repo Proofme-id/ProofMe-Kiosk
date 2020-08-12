@@ -5,6 +5,7 @@ import * as Smilo from '@smilo-platform/smilo-commons-js-web';
 import { NodeStorageManager } from './NodeStorageManager';
 import { IKioskProfile } from 'app/interface/kiosk-profile.interface';
 import { IAdmin } from 'app/interface/admin.interface';
+import { IAccessManagement } from 'app/interface/access-management.interface';
 
 @Injectable()
 export class StorageService {
@@ -18,31 +19,18 @@ export class StorageService {
                 '.data'
             )
         );
+        this.initializeCurrentProfile();
+    }
+
+    async initializeCurrentProfile() {
+        this.currentProfile = await this.storageManager.readJSON<IKioskProfile>('profile.json')
     }
 
     hasAdmins(): Promise<boolean> {
-        return this.get().then(
-            (profile) => {
-                return profile.ADMINS.length > 0;
-            },
+        return this.getAdmins().then(
+            (profile) => true,
             (error) => false
         );
-    }
-
-    async get(): Promise<IKioskProfile> {
-        try {
-            this.currentProfile = await this.storageManager.readJSON<IKioskProfile>('profile.json');
-        } catch (error) {
-            console.log('No config file yet! Creating an empty one');
-            this.currentProfile = {
-                ADMINS: []
-            };
-        }
-        return this.currentProfile;
-    }
-
-    set(profile: IKioskProfile): Promise<void> {
-        return this.storageManager.writeJSON('profile.json', profile);
     }
 
     async getAdmins(): Promise<IAdmin[]> {
@@ -50,6 +38,9 @@ export class StorageService {
     }
 
     addAdmin(admin: IAdmin) {
+        if (!this.currentProfile || !this.currentProfile.ADMINS) {
+            this.currentProfile = {...this.currentProfile, ...{ADMINS: []}};
+        }
         this.currentProfile.ADMINS.push(admin);
         return this.storageManager.writeJSON('profile.json', this.currentProfile);
     }
@@ -59,7 +50,51 @@ export class StorageService {
         return this.storageManager.writeJSON('profile.json', this.currentProfile);
     }
 
-    getStorageBase(): string {
+    updateIdentifyBy(identifyBy: string[]) {
+        if (!this.currentProfile || !this.currentProfile.ACCESS_MANAGEMENT || !this.currentProfile.ACCESS_MANAGEMENT.IDENTIFY_BY) {
+            this.currentProfile = {...this.currentProfile, ...{ACCESS_MANAGEMENT: {...this.currentProfile.ACCESS_MANAGEMENT, IDENTIFY_BY: []}}};
+        }
+        this.currentProfile.ACCESS_MANAGEMENT.IDENTIFY_BY = identifyBy;
+        return this.storageManager.writeJSON('profile.json', this.currentProfile);
+    }
+
+    async getAccessManagement(): Promise<IAccessManagement> {
+        return (await this.storageManager.readJSON<IKioskProfile>('profile.json')).ACCESS_MANAGEMENT;
+    }
+
+    updateBiometricsEnabled(enabled: boolean) {
+        if (!this.currentProfile || !this.currentProfile.ACCESS_MANAGEMENT || !this.currentProfile.ACCESS_MANAGEMENT.ENABLE_FACE_RECOGNITION) {
+            this.currentProfile = {...this.currentProfile, ...{ACCESS_MANAGEMENT: {...this.currentProfile.ACCESS_MANAGEMENT, ENABLE_FACE_RECOGNITION: false}}};
+        }
+        this.currentProfile.ACCESS_MANAGEMENT.ENABLE_FACE_RECOGNITION = enabled;
+        return this.storageManager.writeJSON('profile.json', this.currentProfile);
+    }
+
+    // async getAccessManagement(): Promise<IAccessManagement> {
+    //     return (await this.storageManager.readJSON<IKioskProfile>('profile.json')).ACCESS_MANAGEMENT
+    // }
+
+    // addAccessManagementUser(accessmanagementUser: IAccessManagement) {
+    //     if (!this.currentProfile || !this.currentProfile.ACCESS_MANAGEMENT) {
+    //         this.currentProfile = {
+    //             ...this.currentProfile,
+    //             ...{
+    //                 ACCESS_MANAGEMENT: {
+    //                     ACCESS_LIST: []
+    //                 }
+    //             }
+    //         };
+    //     }
+    //     this.currentProfile.ACCESS_MANAGEMENT.push(accessmanagementUser);
+    //     return this.storageManager.writeJSON('profile.json', this.currentProfile);
+    // }
+
+    // removeAccessManagementUser(accessmanagementUser: IAccessManagement) {
+    //     this.currentProfile.ACCESS_MANAGEMENT.ACCESS_LIST = this.currentProfile.ACCESS_MANAGEMENT.ACCESS_LIST.filter(x => x.value !== accessmanagementUser.);
+    //     return this.storageManager.writeJSON('profile.json', this.currentProfile);
+    // }
+
+    private getStorageBase(): string {
         if (isDevMode()) {
             return '.';
         } else {

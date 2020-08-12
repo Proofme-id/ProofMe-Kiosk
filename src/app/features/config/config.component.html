@@ -45,17 +45,18 @@
             </table>
             <mat-paginator [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
         </div>
-        <br>
-        <br>
+        <h1 class="title">
+            Add new admin
+        </h1>
         <div class="config-div">
             <p>To add an admin, please enter the public key and DID contract address here</p>
             <mat-form-field>
                 <mat-label>Admin public key</mat-label>
-                <input matInput placeholder="0x123456789" [(ngModel)]="adminPublicKey">
+                <input matInput placeholder="0x07D7DDfFDb14A71504864078f23a4A0bF692CeAa" [(ngModel)]="adminPublicKey">
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Admin DID contract address</mat-label>
-                <input matInput placeholder="0x123456789" [(ngModel)]="adminDidContractAddress">
+                <input matInput placeholder="0x24fF1B8F5A876c8afc12a5615Da84fD5115B0121" [(ngModel)]="adminDidContractAddress">
             </mat-form-field>
             <button mat-button class="mat-raised-button" color="primary" (click)="addAdmin()">Add admin</button>
         </div>
@@ -66,10 +67,30 @@
         <h1 class="title">
             System info
         </h1>
+        <div class="config-div">
+            <p>Overview of the system</p>
+        </div>
     </mat-tab>
     <mat-tab label="Access Management">
         <h1 class="title">
             Access management
         </h1>
+        <div class="config-div">
+            <p>Identify By</p>
+            <div>
+                <mat-checkbox [(ngModel)]="emailEnabled" (change)="identifyByChange()">Email</mat-checkbox>
+            </div>
+            <div>
+                <mat-checkbox [(ngModel)]="phonenumberEnabled" (change)="identifyByChange()">Phonenumber</mat-checkbox>
+            </div>
+            <p>Enable face recognition</p>
+            <div>
+                <mat-slide-toggle [(ngModel)]="biometricsEnabled" (change)="biometricsChange()">Biometrics</mat-slide-toggle>
+            </div>
+        </div>
+        <br>
+        <div class="config-div">
+            <p>Access list</p>
+        </div>
     </mat-tab>
 </mat-tab-group>
