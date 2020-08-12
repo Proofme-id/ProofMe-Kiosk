@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../environments/environment';
 import { Config } from 'electron';
 import { ConfigProvider } from './providers/configProvider';
+import { StorageService } from './storage/storage.service';
 
 @Component({
     selector: 'app-root',
@@ -14,7 +15,8 @@ export class AppComponent {
     constructor(
         private electronService: ElectronService,
         private translate: TranslateService,
-        private configProvider: ConfigProvider
+        private configProvider: ConfigProvider,
+        private storageService: StorageService
     ) {
         this.translate.setDefaultLang('en');
         console.log('AppConfig', AppConfig);
@@ -27,5 +29,6 @@ export class AppComponent {
         } else {
             console.log('Run in browser');
         }
+        this.storageService.get();
     }
 }

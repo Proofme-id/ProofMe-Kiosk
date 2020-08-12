@@ -8,13 +8,11 @@ export class HasConfigGuard implements CanActivate {
         private storageService: StorageService,
         private router: Router
     ) {
-        console.log('1. HasConfigGuard');
+
     }
 
     async canActivate(): Promise<boolean> {
-        console.log('2. HasConfigGuard');
-        console.log('await this.storageService.hasProfile()', await this.storageService.hasProfile());
-        return this.storageService.hasProfile().then(hasWallet => {
+        return this.storageService.hasAdmins().then(hasWallet => {
             if (hasWallet) {
                 return true;
             } else {

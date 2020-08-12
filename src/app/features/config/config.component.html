@@ -1,0 +1,75 @@
+<div class="top-bar">
+    <fa-icon [icon]="['fas', 'arrow-left']" size="4x" class="back-arrow" (click)="goToHome()"></fa-icon>
+</div>
+
+<div *ngIf="!loggedIn && !connectionSuccess && !showNotAnAdminError" class="container">
+    <p>This is the admin section. Please login</p>
+    <canvas #qrCodeCanvas></canvas>
+    <p class="qr-code-text">Scan this QR code with the<br /><b>ProofMe.ID App</b></p>
+</div>
+
+<div *ngIf="!loggedIn && connectionSuccess && !showNotAnAdminError" class="container qr-code">
+    <p class="qr-code-text-connected"><b>CONNECTED</b><p>Waiting for app to send data</p>
+</div>
+
+<div *ngIf="showNotAnAdminError" class="container qr-code">
+    <p class="qr-code-text-connected"><b class="error">ERROR</b><p>You are not an admin</p>
+</div>
+
+<mat-tab-group *ngIf="loggedIn" backgroundColor="accent" mat-stretch-tabs>
+    <mat-tab label="Admins">
+        <h1 class="title">
+            Admins
+        </h1>
+        <div class="config-div">
+            <p>The list of admins currently in the system</p>
+            <table mat-table [dataSource]="tableDataSource">
+                <ng-container matColumnDef="publickey">
+                    <th mat-header-cell *matHeaderCellDef>Public Key</th>
+                    <td mat-cell *matCellDef="let admin">{{ admin.publicKey }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="didContractAddress">
+                    <th mat-header-cell *matHeaderCellDef>DID Contract Address</th>
+                    <td mat-cell *matCellDef="let admin">{{ admin.didContractAddress }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="deleteAction">
+                    <th mat-header-cell *matHeaderCellDef class="text-right">Delete</th>
+                    <td mat-cell *matCellDef="let publicKey">
+                        <mat-icon (click)="removeAdmin(publicKey)" color="warn" class="delete-icon">delete</mat-icon>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
+        </div>
+        <br>
+        <br>
+        <div class="config-div">
+            <p>To add an admin, please enter the public key and DID contract address here</p>
+            <mat-form-field>
+                <mat-label>Admin public key</mat-label>
+                <input matInput placeholder="0x123456789" [(ngModel)]="adminPublicKey">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Admin DID contract address</mat-label>
+                <input matInput placeholder="0x123456789" [(ngModel)]="adminDidContractAddress">
+            </mat-form-field>
+            <button mat-button class="mat-raised-button" color="primary" (click)="addAdmin()">Add admin</button>
+        </div>
+        <br>
+        <br>
+    </mat-tab>
+    <mat-tab label="System info">
+        <h1 class="title">
+            System info
+        </h1>
+    </mat-tab>
+    <mat-tab label="Access Management">
+        <h1 class="title">
+            Access management
+        </h1>
+    </mat-tab>
+</mat-tab-group>

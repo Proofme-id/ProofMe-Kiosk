@@ -1,0 +1,104 @@
+:host {
+    img {
+        height: auto;
+        max-width: 40%;
+    }
+
+    .back-arrow {
+        color: #006599;
+        padding-left: 20px;
+
+        &:hover {
+            cursor: pointer;
+            opacity: 0.5;
+        }
+    }
+    
+    .top-bar {
+        background-color: white;
+        color: #006599;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        position: absolute;
+        right: 0;
+        left: 0;
+    }
+
+    .config-div {
+        margin-left: 2%;
+        margin-right: 2%;
+        width: calc(100% - 40px - 4%);
+        background: white;
+        color: #006599;
+        padding: 20px;
+        border-radius: 25px;
+    }
+    .remove-button {
+        color: red;
+        font-weight: 800;
+
+        &:hover {
+            cursor: pointer;
+            opacity: 0.5;
+        }
+    }
+
+    mat-icon {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    table {
+        width: 100%;
+        // table-layout: fixed;
+    }
+    
+    th, td {
+        overflow: hidden;
+        width: 200px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding-left: 0 !important;
+    }
+
+    mat-tab-group {
+        padding-top: 100px;
+    }
+
+    h1 {
+        margin-left: 40px;
+    }
+
+    .delete-icon {
+        text-align: right;
+        float: right;
+        padding-right: 22px;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    mat-form-field {
+        width: 100%;
+    }
+
+    .mat-row {
+        height: auto;
+    }
+    
+    .mat-cell {
+        padding: 8px 8px 8px 0px;
+    }
+
+    .qr-code-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .error {
+       color: red; 
+    }
+}

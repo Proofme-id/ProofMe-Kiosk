@@ -7,9 +7,11 @@ import * as Smilo from '@smilo-platform/smilo-commons-js-web';
 import * as QRCode from 'qrcode';
 import * as crypto from 'crypto';
 import { ConfigProvider } from 'app/providers/configProvider';
-import Web3 from '@smilo-platform/web3';
-import ClaimHolder from '../contracts/ClaimHolder';
+import ClaimHolder from '../../contracts/ClaimHolder';
 import { ThrowStmt } from '@angular/compiler';
+import { MatDialog } from '@angular/material/dialog';
+import { IAdmin } from 'app/interface/admin.interface';
+import { Web3Provider } from 'app/providers/web3Provider';
 
 @Component({
     selector: 'app-install',
@@ -43,7 +45,8 @@ export class InstallComponent implements OnInit {
         private router: Router,
         private storageService: StorageService,
         private ngZone: NgZone,
-        private configProvider: ConfigProvider
+        private configProvider: ConfigProvider,
+        private web3Provider: Web3Provider
     ) {
 
     }
@@ -68,7 +71,7 @@ export class InstallComponent implements OnInit {
     async generateQRCode(uuid: string) {
         const canvas = this.qrCodeCanvas.nativeElement as HTMLCanvasElement;
         // tslint:disable-next-line: max-line-length
-        QRCode.toCanvas(canvas, 'share-kiosk-data:' + uuid, {
+        QRCode.toCanvas(canvas, 'p2p:' + uuid, {
             width: 210
         });
         console.log('Challenge QR code displayed');
@@ -244,7 +247,7 @@ export class InstallComponent implements OnInit {
                     console.log('peerConnection ERROR: Invalid JSON');
                     data = {};
                 }
-                const { action, message, token, id, checkinData, didContractAddress, kioskAdminSignature } = data;
+                const { action, didContractAddress, kioskAdminSignature } = data;
 
                 switch (action) {
                     // when a user tries to login
@@ -253,29 +256,16 @@ export class InstallComponent implements OnInit {
                         console.log('peerConnection disconnect');
                         this.disconnect();
                         break;
-                    case 'share-checkin-data':
-                        console.log('peerConnection share-checkin-data:', checkinData);
-                        break;
                     case 'share-kiosk-data':
                         console.log('peerConnection didContractAddress:', didContractAddress);
                         console.log('kioskAdminSignature:', kioskAdminSignature);
-                        const web3 = new Web3('https://api-eu.didux.network/');
-                        const recoveredAddress = web3.eth.accounts.recover(this.kioskAdminChallenge, kioskAdminSignature);
-                        console.log('recoveredAddress:', recoveredAddress);
-                        const sha3Key = web3.utils.keccak256(recoveredAddress);
-                        const keyManagerContract = new web3.eth.Contract(
-                            ClaimHolder.abi,
-                            didContractAddress
-                        );
-                        console.log('sha3Key:', sha3Key);
-                        const key = await keyManagerContract.methods.getKey(sha3Key).call();
-                        console.log('key:', key);
-                        if (parseInt(key.keyType, 10) === 1) {
+                        const recoveredAddress = this.web3Provider.getPublicKeyFromSignature(this.kioskAdminChallenge, kioskAdminSignature);
+                        const isOwner = await this.web3Provider.isOwnerOfDidContract(recoveredAddress, didContractAddress);
+                        if (isOwner) {
                             console.log('YES valid');
-                            this.storageService.set({
-                                ADMINS: [
-                                    recoveredAddress
-                                ]
+                            this.storageService.addAdmin({
+                                publicKey: recoveredAddress,
+                                didContractAddress
                             });
                             this.ngZone.run(() => {
                                 this.setStatus(6);
@@ -360,7 +350,7 @@ export class InstallComponent implements OnInit {
            result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         return result;
-     }
+    }
 
     async disconnect() {
         // if (this.dataChannel.readyState === 'open') {

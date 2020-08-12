@@ -2,9 +2,10 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PageNotFoundComponent } from './shared/components';
 import { HasConfigGuard } from './guards/has-config.guard';
-import { HomeComponent } from './home/home.component';
-import { InstallComponent } from './install/install.component';
-import { ConfigComponent } from './config/config.component';
+import { HomeComponent } from './features/home/home.component';
+import { InstallComponent } from './features/install/install.component';
+import { ConfigComponent } from './features/config/config.component';
+import { EnrollComponent } from './features/enroll/enroll.component';
 
 const routes: Routes = [
     {
@@ -18,17 +19,23 @@ const routes: Routes = [
         canActivate: [HasConfigGuard]
     },
     {
+        path: 'enroll',
+        component: EnrollComponent,
+        canActivate: [HasConfigGuard]
+    },
+    {
+        path: 'config',
+        component: ConfigComponent,
+        canActivate: [HasConfigGuard]
+    },
+    {
         path: 'install',
         component: InstallComponent
     },
     {
-        path: 'config',
-        component: ConfigComponent
-    },
-    // {
-    //     path: '**',
-    //     component: PageNotFoundComponent
-    // }
+        path: '**',
+        component: PageNotFoundComponent
+    }
 ];
 
 @NgModule({

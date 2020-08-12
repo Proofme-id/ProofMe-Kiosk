@@ -3,7 +3,7 @@ import '../polyfills';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormBuilder } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
@@ -19,9 +19,24 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { StorageService } from './storage/storage.service';
 import { ConfigProvider } from './providers/configProvider';
 import { HasConfigGuard } from './guards/has-config.guard';
-import { ConfigComponent } from './config/config.component';
-import { HomeComponent } from './home/home.component';
-import { InstallComponent } from './install/install.component';
+import { ConfigComponent } from './features/config/config.component';
+import { HomeComponent } from './features/home/home.component';
+import { InstallComponent } from './features/install/install.component';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from "@angular/material/dialog";
+import { DeleteAdminDialogComponent } from './dialogs/delete-admin-dialog/delete-admin.dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { Web3Provider } from './providers/web3Provider';
+import { EnrollComponent } from './features/enroll/enroll.component';
+
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -35,7 +50,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         ConfigComponent,
         HomeComponent,
         InstallComponent,
-        ConfigComponent
+        ConfigComponent,
+        EnrollComponent,
+        DeleteAdminDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -44,7 +61,18 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         HttpClientModule,
         CoreModule,
         SharedModule,
+        BrowserAnimationsModule,
         AppRoutingModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatInputModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+        MatTabsModule,
+        MatSnackBarModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -56,9 +84,13 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     providers: [
         StorageService,
         ConfigProvider,
-        HasConfigGuard
+        Web3Provider,
+        FormBuilder,
+        HasConfigGuard,
+        { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false }}
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
+    entryComponents: [DeleteAdminDialogComponent]
 })
 export class AppModule {
     constructor(library: FaIconLibrary) {

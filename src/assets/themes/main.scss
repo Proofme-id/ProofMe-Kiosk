@@ -1,0 +1,74 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+$proofme-blue: (
+  50: #006599,
+  100: #006599,
+  200: #006599,
+  300: #006599,
+  400: #006599,
+  500: #006599,
+  600: #006599,
+  700: #006599,
+  800: #006599,
+  900: #006599,
+  A100: #006599,
+  A200: #006599,
+  A400: #006599,
+  A700: #006599,
+  contrast: (
+    50: white,
+    100: white,
+    200: white,
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: white,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+$proofme-blue-accent: (
+    50: #91BDD3,
+    100: #91BDD3,
+    200: #91BDD3,
+    300: #91BDD3,
+    400: #91BDD3,
+    500: #91BDD3,
+    600: #91BDD3,
+    700: #91BDD3,
+    800: #91BDD3,
+    900: #91BDD3,
+    A100: #91BDD3,
+    A200: #91BDD3,
+    A400: #91BDD3,
+    A700: #91BDD3,
+    contrast: (
+        50: white,
+        100: white,
+        200: white,
+        300: white,
+        400: white,
+        500: white,
+        600: white,
+        700: white,
+        800: white,
+        900: white,
+        A100: white,
+        A200: white,
+        A400: white,
+        A700: white,
+    )
+);
+
+$my-app-primary: mat-palette($proofme-blue);
+$my-app-accent:  mat-palette($proofme-blue-accent);
+$my-app-warn:    mat-palette($mat-deep-orange);
+$my-app-theme:   mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
+
+@include angular-material-theme($my-app-theme);
