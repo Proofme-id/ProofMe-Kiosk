@@ -49,20 +49,20 @@ apt-get update && apt-get -y install cloud-utils
 cloud-localds --disk-format qcow2 cloud.img cloud.txt
 ```
 
+Increase disk space with 25GB (Default is 2GB):
+```
+qemu-img resize ubuntu-18.04-server-cloudimg-arm64.img +25G
+```
+
 Backup your image:
 
 ```
 cp ubuntu-18.04-server-cloudimg-arm64.img ubuntu-18.04-server-cloudimg-arm64.img.original
 ```
 
-Increase disk space with 25GB (Default is 2GB):
-```
-qemu-img resize ubuntu-18.04-server-cloudimg-arm64.img +25G
-```
-
 Launch QEMU Guest:
 ```
-qemu-system-aarch64 -m 4096 -smp 4 -cpu cortex-a57 -M virt -nographic \
+qemu-system-aarch64 -m 4096 -smp 8 -cpu cortex-a57 -M virt -nographic \
   -pflash flash0.img \
   -pflash flash1.img \
   -drive if=none,file=ubuntu-18.04-server-cloudimg-arm64.img,id=hd0 \
