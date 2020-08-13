@@ -88,6 +88,9 @@ curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 sudo apt install nodejs
 ```
 
+## Get build file
+`wget https://raw.githubusercontent.com/Proofme-id/ProofMe-Kiosk/master/snap/snapcraft.yaml` 
+
 ## Build a snap
 Execute 'snapcraft' to build a kiosk snap.
 

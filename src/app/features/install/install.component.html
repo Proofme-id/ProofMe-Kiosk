@@ -1,45 +1,81 @@
-<div class="container" *ngIf="status == 0">
+
+
+<div class="container" *ngIf="screen == 'welcome'">
     <img src="./assets/images/proofme.ID-white.png">
-    <h1 class="title" (click)="setStatus(2)">
-        {{ 'PAGES.HOME.TITLE' | translate }}
+    <h1 class="title">
+        {{ 'PAGES.INSTALL.WELCOME' | translate }}
     </h1>
-    <h2 class="title" (click)="setStatus(3)">
-        {{ 'PAGES.INSTALL.TITLE' | translate }}
-    </h2>
+    <section>
+        <button type="button" (click)="setScreen('selectCountry')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>
+    </section>
 </div>
 
-<div class="container error" *ngIf="status == 2">
-    <fa-icon class="info-icon" [icon]="['fas', 'times']" size="10x"></fa-icon>
-    <h1 class="title" (click)="setStatus(0)">
-        {{ 'PAGES.HOME.ERROR' | translate }}
+<div class="container" *ngIf="screen == 'selectCountry'">
+    <h1 class="title">
+        {{ 'PAGES.INSTALL.SELECT_COUNTRY' | translate }}
     </h1>
+    <form>
+        <mat-form-field appearance="fill">
+            <mat-label>{{ 'PAGES.INSTALL.SELECT_COUNTRY' | translate }}</mat-label>
+            <mat-select [(ngModel)]="selectedCountry" name="food">
+                <mat-option *ngFor="let country of countries" [value]="country.value">
+                    {{country.viewValue}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+    <section>
+        <button type="button" (click)="setScreen('selectLanguage')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>
+    </section>
 </div>
 
-<div class="container success" *ngIf="status == 3">
-    <fa-icon class="info-icon" [icon]="['fas', 'check']" size="10x"></fa-icon>
-    <h1 class="title" (click)="setStatus(0)">
-        {{ 'PAGES.HOME.SUCCESS' | translate }}
+<div class="container" *ngIf="screen == 'selectLanguage'">
+    <h1 class="title">
+        {{ 'PAGES.INSTALL.SELECT_LANGUAGE' | translate }}
     </h1>
+    <section>
+        <button type="button" (click)="setScreen('selectInternet')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>
+    </section>
 </div>
 
-<div class="container" *ngIf="status == 4">
-    <p>Welcome to the setup of the kiosk, please setup with your information</p>
+<div class="container" *ngIf="screen == 'selectInternet'">
+    <h1 class="title">
+        {{ 'PAGES.INSTALL.SELECT_INTERNET' | translate }}
+    </h1>
+    <section>
+        <button type="button" (click)="setScreen('selectType')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>
+    </section>
+</div>
+
+<div class="container" *ngIf="screen == 'selectType'">
+    <h1 class="title">
+        {{ 'PAGES.INSTALL.SELECT_TYPE' | translate }}
+    </h1>
+    <section>
+        <button type="button" (click)="setScreen('addAdmin')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>
+    </section>
+</div>
+
+<div class="container" [hidden]="screen !== 'addAdmin'">
+    <h1 class="title">
+        {{ 'PAGES.INSTALL.ADD_ADMIN' | translate }}
+    </h1>
     <canvas #qrCodeCanvas></canvas>
-    <p class="qr-code-text">Scan this QR code with the<br /><b>ProofMe.ID App</b></p>
+    <p class="qr-code-text">{{ 'PAGES.INSTALL.ADD_ADMIN_TEXT' | translate }}<br /><b>{{ 'PAGES.INSTALL.PROOFME_APP' | translate }}</b></p>
 </div>
 
-<div class="container qr-code" *ngIf="status == 5">
+<div class="container qr-code" *ngIf="screen == 'connectedAdmin'">
     <p class="qr-code-text-connected"><b>CONNECTED</b><p>Waiting for app to send data</p>
 </div>
 
-<div class="container qr-code" *ngIf="status == 6">
-    <img src="/assets/images/success-icon.png" class="successfull-icon">
+<div class="container qr-code" *ngIf="screen == 'success'">
+    <img src="./assets/images/success-icon.png" class="successfull-icon">
     <p class="qr-code-text-connected"><b>Successfull setup</b></p>
 </div>
 
 <!-- Error DID contract enrollment -->
-<div class="container qr-code" *ngIf="status == 7">
-    <img src="/assets/images/failed-icon.png" class="successfull-icon">
+<div class="container qr-code" *ngIf="screen == 'failed'">
+    <img src="./assets/images/failed-icon.png" class="successfull-icon">
     <br>
     <b>Signing key was not valid</b>
     <p class="did-failed-text" (click)="retry()"><b>Retry</b></p>

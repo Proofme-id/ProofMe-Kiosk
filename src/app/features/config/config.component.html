@@ -68,7 +68,10 @@
             System info
         </h1>
         <div class="config-div">
-            <p>Overview of the system</p>
+            <p>Network connections</p>
+            <li *ngFor="let interface of networkInterfaces;">
+                <b>{{ interface.name }}</b>: {{ interface.address }}
+            </li>
         </div>
     </mat-tab>
     <mat-tab label="Access Management">

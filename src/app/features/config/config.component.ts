@@ -14,6 +14,7 @@ import { Web3Provider } from 'app/providers/web3Provider';
 import * as crypto from 'crypto';
 import * as QRCode from 'qrcode';
 import { IAccessManagement } from 'app/interface/access-management.interface';
+const { networkInterfaces } = require('os');
 
 @Component({
     selector: 'app-config',
@@ -43,6 +44,7 @@ export class ConfigComponent implements OnInit {
     kioskAdminChallenge = null;
 
     // System info
+    networkInterfaces;
 
     // Access management
     emailEnabled = false;
@@ -63,6 +65,7 @@ export class ConfigComponent implements OnInit {
         // For debugging only!! Enable this to skip admin login
         this.loggedIn = true;
         this.loadConfigJson();
+        this.networkInterfaces = this.getNetworkInterfaces();
     }
 
     async ngOnInit(): Promise<void> {
@@ -187,6 +190,22 @@ export class ConfigComponent implements OnInit {
         this.storageService.updateBiometricsEnabled(this.biometricsEnabled);
     }
 
+    getNetworkInterfaces() {
+        const nets = networkInterfaces();
+        const results = []; // or just '{}', an empty object
+
+        for (const name of Object.keys(nets)) {
+            for (const net of nets[name]) {
+                // skip over non-ipv4 and internal (i.e. 127.0.0.1) addresses
+                if (net.family === 'IPv4' && !net.internal) {
+                    results.push({ name: name, address: net.address });
+                }
+            }
+        }
+        console.log("Network Interfaces:" + JSON.stringify(results));
+        return results;
+    }
+
 
 
     //////////////////////////////////////////////////
@@ -207,7 +226,7 @@ export class ConfigComponent implements OnInit {
 
     async disconnect() {
         // if (this.dataChannel.readyState === 'open') {
-        //     this.dataChannel.send(JSON.stringify({action: 'disconnect'}));
+        //     this.dataChannel.send(JSON.stringify({screen: 'disconnect'}));
         // }
         this.ngZone.run(() => {
             this.connectionSuccess = false;
@@ -440,7 +459,7 @@ export class ConfigComponent implements OnInit {
                         }
                         break;
                     default:
-                        console.log('peerConnection unknown action: ' + action);
+                        console.log('peerConnection unknown screen: ' + action);
                 }
             });
 

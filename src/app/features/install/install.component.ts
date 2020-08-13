@@ -1,17 +1,15 @@
 import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { NodeStorageManager } from 'app/storage/NodeStorageManager';
-import * as path from 'path';
 import { StorageService } from 'app/storage/storage.service';
-import * as Smilo from '@smilo-platform/smilo-commons-js-web';
 import * as QRCode from 'qrcode';
 import * as crypto from 'crypto';
 import { ConfigProvider } from 'app/providers/configProvider';
-import ClaimHolder from '../../contracts/ClaimHolder';
-import { ThrowStmt } from '@angular/compiler';
-import { MatDialog } from '@angular/material/dialog';
-import { IAdmin } from 'app/interface/admin.interface';
 import { Web3Provider } from 'app/providers/web3Provider';
+
+interface Country {
+    value: string;
+    viewValue: string;
+}
 
 @Component({
     selector: 'app-install',
@@ -20,13 +18,8 @@ import { Web3Provider } from 'app/providers/web3Provider';
 })
 export class InstallComponent implements OnInit {
     uuid: string = null;
-
-    // Status
-    // 0 = default
-    // 1 = processing
-    // 2 = error
-    // 3 = success
-    status: number;
+    selectedCountry: string;
+    screen: string = "welcome";
 
     @ViewChild('qrCodeCanvas', {static: false})
     qrCodeCanvas: ElementRef;
@@ -51,27 +44,27 @@ export class InstallComponent implements OnInit {
 
     }
 
+    countries: Country[] = [
+        {value: 'US', viewValue: 'United States'},
+        {value: 'NL', viewValue: 'Netherlands'}
+    ];
+
     async ngOnInit(): Promise<void> {
-        // this.status = 0;
-        this.setStatus(4);
         this.uuid = null;
         await this.configProvider.getConfig();
         this.authUrl = this.configProvider.getAuthUrl();
         this.signalingWS = this.configProvider.getSignalingWS();
-
-        console.log('this.signalingWS:', this.signalingWS);
-
         this.launchWebsocketClient();
     }
 
-    setStatus(status: number) {
-        this.status = status;
+    setScreen(screen: string) {
+        this.screen = screen;
     }
 
     async generateQRCode(uuid: string) {
         const canvas = this.qrCodeCanvas.nativeElement as HTMLCanvasElement;
         QRCode.toCanvas(canvas, 'p2p:' + uuid, {
-            width: 210
+            width: 400
         });
         console.log('Challenge QR code displayed');
     }
@@ -266,7 +259,7 @@ export class InstallComponent implements OnInit {
                                 didContractAddress
                             });
                             this.ngZone.run(() => {
-                                this.setStatus(6);
+                                this.setScreen('success')
                                 setTimeout(() => {
                                     console.log('NAVIGATE');
                                     this.router.navigate(['home']);
@@ -275,13 +268,13 @@ export class InstallComponent implements OnInit {
                         } else {
                             console.log('NOT valid');
                             this.ngZone.run(() => {
-                                this.setStatus(7);
+                                this.setScreen('failed');
                             })
                         }
 
                         break;
                     default:
-                        console.log('peerConnection unknown action: ' + action);
+                        console.log('peerConnection unknown screen: ' + action);
                 }
             });
 
@@ -337,7 +330,7 @@ export class InstallComponent implements OnInit {
         this.did = null;
         this.kioskAdminChallenge = this.generateChallenge(64);
         this.dataChannel.send(JSON.stringify({action: 'share-kiosk-data', url: this.authUrl, kioskAdminChallenge: this.kioskAdminChallenge}));
-        this.setStatus(5);
+        this.setScreen('addAdmin');
     }
 
     generateChallenge(length: number) {
@@ -352,7 +345,7 @@ export class InstallComponent implements OnInit {
 
     async disconnect() {
         // if (this.dataChannel.readyState === 'open') {
-        //     this.dataChannel.send(JSON.stringify({action: 'disconnect'}));
+        //     this.dataChannel.send(JSON.stringify({screen: 'disconnect'}));
         // }
         this.ngZone.run(() => {
             this.connectionSuccess = false;
@@ -366,7 +359,7 @@ export class InstallComponent implements OnInit {
     }
 
     retry() {
-        this.setStatus(4);
+        this.setScreen("welcome")
         this.disconnect();
     }
 
