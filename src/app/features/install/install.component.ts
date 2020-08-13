@@ -70,12 +70,10 @@ export class InstallComponent implements OnInit {
 
     async generateQRCode(uuid: string) {
         const canvas = this.qrCodeCanvas.nativeElement as HTMLCanvasElement;
-        // tslint:disable-next-line: max-line-length
         QRCode.toCanvas(canvas, 'p2p:' + uuid, {
             width: 210
         });
         console.log('Challenge QR code displayed');
-        // this.checkinData = null;
     }
 
     async launchWebsocketClient() {
