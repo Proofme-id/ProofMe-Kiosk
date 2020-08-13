@@ -12,7 +12,7 @@ export class ConfigProvider {
     }
 
     async getConfig(): Promise<void> {
-        const config = await this.http.get<any>('/assets/config/config.json').pipe(take(1)).toPromise();
+        const config = await this.http.get<any>('./assets/config/config.json').pipe(take(1)).toPromise();
         this.signalingWS = config.signalingWS;
         this.authUrl = config.authUrl;
     }

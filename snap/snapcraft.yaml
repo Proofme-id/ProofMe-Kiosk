@@ -35,6 +35,7 @@ parts:
     nodejs-version: 10.21.0
     nodejs-package-manager: npm
     source: https://github.com/Proofme-id/ProofMe-Kiosk.git
+    source-branch: feature/init
     after: [desktop-gtk3, xwayland-kiosk-helper]
     build-environment:
       - PATH: $PATH:$SNAPCRAFT_PART_BUILD/../npm/bin
