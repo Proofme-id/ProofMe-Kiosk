@@ -20,8 +20,8 @@ function createWindow() {
             allowRunningInsecureContent: (serve) ? true : false,
         },
     });
+    win.webContents.openDevTools();
     if (serve) {
-        win.webContents.openDevTools();
         require('electron-reload')(__dirname, {
             electron: require(__dirname + "/node_modules/electron")
         });

@@ -14,7 +14,8 @@ import { Web3Provider } from 'app/providers/web3Provider';
 import * as crypto from 'crypto';
 import * as QRCode from 'qrcode';
 import { IAccessManagement } from 'app/interface/access-management.interface';
-const { networkInterfaces } = require('os');
+const { networkInterfaces, uptime } = require('os');
+const { width, height } = require("screenz");
 
 @Component({
     selector: 'app-config',
@@ -45,6 +46,8 @@ export class ConfigComponent implements OnInit {
 
     // System info
     networkInterfaces;
+    width = width;
+    height = height;
 
     // Access management
     emailEnabled = false;
@@ -90,6 +93,20 @@ export class ConfigComponent implements OnInit {
             }
         }
         this.biometricsEnabled = this.accessManagement.ENABLE_FACE_RECOGNITION;
+    }
+
+    getUptime() {
+        const seconds = uptime();
+        var d = Math.floor(seconds / (3600*24));
+        var h = Math.floor(seconds % (3600*24) / 3600);
+        var m = Math.floor(seconds % 3600 / 60);
+        var s = Math.floor(seconds % 60);
+
+        var dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
+        var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+        var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+        var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+        return dDisplay + hDisplay + mDisplay + sDisplay;
     }
 
     goToHome() {

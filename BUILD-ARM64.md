@@ -62,7 +62,7 @@ cp ubuntu-18.04-server-cloudimg-arm64.img ubuntu-18.04-server-cloudimg-arm64.img
 
 Launch QEMU Guest:
 ```
-qemu-system-aarch64 -m 4096 -smp 8 -cpu cortex-a57 -M virt -nographic \
+qemu-system-aarch64 -m 4096M -smp 8 -cpu cortex-a57 -M virt -nographic \
   -pflash flash0.img \
   -pflash flash1.img \
   -drive if=none,file=ubuntu-18.04-server-cloudimg-arm64.img,id=hd0 \
@@ -70,6 +70,17 @@ qemu-system-aarch64 -m 4096 -smp 8 -cpu cortex-a57 -M virt -nographic \
   -drive if=none,id=cloud,file=cloud.img \
   -device virtio-blk-device,drive=cloud \
   -netdev user,id=user0,hostfwd=tcp::2222-:22 -device virtio-net-device,netdev=user0
+```
+
+```
+qemu-system-aarch64 -nographic -machine virt,gic-version=max -m 4096M -cpu cortex-a57 -smp 4 \
+-netdev user,id=user0,hostfwd=tcp::2222-:22 -device virtio-net-device,netdev=user0 \
+-pflash flash0.img \
+-pflash flash1.img \
+-drive if=none,file=ubuntu-18.04-server-cloudimg-arm64.img,id=hd0 \
+-device virtio-blk-device,drive=hd0 \
+-drive if=none,id=cloud,file=cloud.img \
+-device virtio-blk-device,drive=cloud
 ```
 
 login with `didux` : `secret` or ssh into the machine

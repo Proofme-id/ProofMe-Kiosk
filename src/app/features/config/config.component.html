@@ -17,6 +17,28 @@
 </div>
 
 <mat-tab-group *ngIf="loggedIn" backgroundColor="accent" mat-stretch-tabs>
+    <mat-tab label="Access Management">
+        <h1 class="title">
+            Access management
+        </h1>
+        <div class="config-div">
+            <p>Identify By</p>
+            <div>
+                <mat-checkbox [(ngModel)]="emailEnabled" (change)="identifyByChange()">Email</mat-checkbox>
+            </div>
+            <div>
+                <mat-checkbox [(ngModel)]="phonenumberEnabled" (change)="identifyByChange()">Phonenumber</mat-checkbox>
+            </div>
+            <p>Enable face recognition</p>
+            <div>
+                <mat-slide-toggle [(ngModel)]="biometricsEnabled" (change)="biometricsChange()">Biometrics</mat-slide-toggle>
+            </div>
+        </div>
+        <br>
+        <div class="config-div">
+            <p>Access list</p>
+        </div>
+    </mat-tab>
     <mat-tab label="Admins">
         <h1 class="title">
             Admins
@@ -65,35 +87,24 @@
     </mat-tab>
     <mat-tab label="System info">
         <h1 class="title">
-            System info
+            Network
         </h1>
         <div class="config-div">
-            <p>Network connections</p>
-            <li *ngFor="let interface of networkInterfaces;">
-                <b>{{ interface.name }}</b>: {{ interface.address }}
-            </li>
+                <li *ngFor="let interface of networkInterfaces;">
+                    <b>{{ interface.name }}</b>: {{ interface.address }}
+                </li>
         </div>
-    </mat-tab>
-    <mat-tab label="Access Management">
         <h1 class="title">
-            Access management
+            Display
         </h1>
         <div class="config-div">
-            <p>Identify By</p>
-            <div>
-                <mat-checkbox [(ngModel)]="emailEnabled" (change)="identifyByChange()">Email</mat-checkbox>
-            </div>
-            <div>
-                <mat-checkbox [(ngModel)]="phonenumberEnabled" (change)="identifyByChange()">Phonenumber</mat-checkbox>
-            </div>
-            <p>Enable face recognition</p>
-            <div>
-                <mat-slide-toggle [(ngModel)]="biometricsEnabled" (change)="biometricsChange()">Biometrics</mat-slide-toggle>
-            </div>
+            <p>{{ width }} x {{ height }}</p>
         </div>
-        <br>
+        <h1 class="title">
+            Uptime
+        </h1>
         <div class="config-div">
-            <p>Access list</p>
+            <p>{{ getUptime() }}</p>
         </div>
     </mat-tab>
 </mat-tab-group>
