@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var electron_1 = require("electron");
 var path = require("path");
 var url = require("url");
+var USBRelay = require("@josephdadams/usbrelay");
+var relay;
 var win = null;
 var args = process.argv.slice(1), serve = args.some(function (val) { return val === '--serve'; });
 function createWindow() {
@@ -70,4 +72,52 @@ catch (e) {
     // Catch Error
     // throw e;
 }
+// const relays = USBRelay.Relays
+// console.log("Relays:", relays)
+// connectToRelay()
+try {
+    relay = new USBRelay();
+    console.log("Relay: ", relay);
+    relay.setState(1, true);
+    setTimeout(function () {
+        relay.setState(1, false);
+    }, 1000);
+}
+catch (e) {
+    console.log("Could not switch relay:", e);
+}
+electron_1.ipcMain.on('activate', function (event, slot) {
+    console.log('Activate ' + slot);
+    if (relay != undefined) {
+        relay.setState(slot, true);
+        event.returnValue = 'ok';
+    }
+    else {
+        event.returnValue = 'nok';
+    }
+});
+electron_1.ipcMain.on('deactivate', function (event, slot) {
+    console.log('Deactivate ' + slot);
+    if (relay != undefined) {
+        relay.setState(slot, false);
+        event.returnValue = 'ok';
+    }
+    else {
+        event.returnValue = 'nok';
+    }
+});
+electron_1.ipcMain.on('relays', function (event, arg) {
+    console.log('Get relays');
+    // connect to first relay
+    var relays = USBRelay.Relays;
+    console.log("usbRelay loaded: relays:", relays);
+    if (relays.length > 0 && relay == undefined) {
+        relay = new USBRelay();
+        console.log("Relay: ", relay);
+    }
+    else if (relays.length == 0) {
+        relay = undefined;
+    }
+    event.returnValue = relays;
+});
 //# sourceMappingURL=main.js.map

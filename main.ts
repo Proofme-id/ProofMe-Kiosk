@@ -1,12 +1,15 @@
-import { app, BrowserWindow, screen, Menu } from 'electron';
+import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+const USBRelay = require("@josephdadams/usbrelay");
 
+let relay: any;
 let win: BrowserWindow = null;
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
 
 function createWindow(): BrowserWindow {
+
 
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
@@ -78,8 +81,58 @@ try {
       createWindow();
     }
   });
-
 } catch (e) {
   // Catch Error
   // throw e;
 }
+
+// const relays = USBRelay.Relays
+// console.log("Relays:", relays)
+
+// connectToRelay()
+
+try {
+  relay = new USBRelay();
+  console.log("Relay: ", relay)
+  relay.setState(1, true);
+
+  setTimeout(function () {
+    relay.setState(1, false);
+  }, 1000);
+} catch (e) {
+  console.log("Could not switch relay:", e)
+}
+
+ipcMain.on('activate', (event, slot) => {
+  console.log('Activate '+ slot)
+  if (relay != undefined) {
+    relay.setState(slot, true);
+    event.returnValue = 'ok'
+  } else {
+    event.returnValue = 'nok'
+  }
+})
+
+ipcMain.on('deactivate', (event, slot) => {
+  console.log('Deactivate '+ slot)
+  if (relay != undefined) {
+    relay.setState(slot, false);
+    event.returnValue = 'ok'
+  } else {
+    event.returnValue = 'nok'
+  }
+})
+
+ipcMain.on('relays', (event, arg) => {
+  console.log('Get relays')
+  // connect to first relay
+  const relays = USBRelay.Relays
+  console.log("usbRelay loaded: relays:", relays)
+  if (relays.length > 0 && relay == undefined) {
+    relay = new USBRelay();
+    console.log("Relay: ", relay)
+  } else if (relays.length == 0) {
+    relay = undefined;
+  }
+  event.returnValue = relays
+})

@@ -95,6 +95,26 @@
                 </li>
         </div>
         <h1 class="title">
+            Relays
+        </h1>
+        <div class="config-div">
+            <button (click)="getRelays()">Scan devices</button><br><br>
+            <span *ngFor="let relay of relays;">
+                <b>Type:</b> {{ relay.product }} <br>
+                <b>Manufacturer:</b> {{ relay.manufacturer }} <br/>
+                <b>Slot 1:</b> <button (click)="switchRelayOn(1)">ON</button> <button (click)="switchRelayOff(1)">OFF</button><br/>
+                <b>Slot 2:</b> <button (click)="switchRelayOn(2)">ON</button> <button (click)="switchRelayOff(2)">OFF</button><br/>
+            </span>
+            <br>
+            <span *ngIf="relays.length < 1">
+                No devices found.
+            </span>
+
+        </div>
+<!--        <div class="config-div">-->
+<!--            <p>{{ relays }}</p>-->
+<!--        </div>-->
+        <h1 class="title">
             Display
         </h1>
         <div class="config-div">

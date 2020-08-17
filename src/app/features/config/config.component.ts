@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron';
 import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfigProvider } from 'app/providers/configProvider';
@@ -46,16 +47,13 @@ export class ConfigComponent implements OnInit {
 
     // System info
     networkInterfaces;
+    relays = [];
     width = width;
     height = height;
 
     // Access management
     emailEnabled = false;
     biometricsEnabled = false;
-    phonenumberEnabled = false;
-
-    accessManagement: IAccessManagement;
-
     constructor(
         private router: Router,
         private storageService: StorageService,
@@ -70,6 +68,10 @@ export class ConfigComponent implements OnInit {
         this.loadConfigJson();
         this.networkInterfaces = this.getNetworkInterfaces();
     }
+
+    phonenumberEnabled = false;
+
+    accessManagement: IAccessManagement;
 
     async ngOnInit(): Promise<void> {
         this.tableDataSource.paginator = this.paginator;
@@ -107,6 +109,20 @@ export class ConfigComponent implements OnInit {
         var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
         var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
         return dDisplay + hDisplay + mDisplay + sDisplay;
+    }
+
+    switchRelayOn(slot) {
+        console.log(ipcRenderer.sendSync('activate', slot))
+    }
+
+    switchRelayOff(slot) {
+        console.log(ipcRenderer.sendSync('deactivate', slot))
+    }
+
+    getRelays() {
+        this.relays = ipcRenderer.sendSync('relays', '')
+        console.log(this.relays)
+
     }
 
     goToHome() {
@@ -222,7 +238,6 @@ export class ConfigComponent implements OnInit {
         console.log("Network Interfaces:" + JSON.stringify(results));
         return results;
     }
-
 
 
     //////////////////////////////////////////////////
