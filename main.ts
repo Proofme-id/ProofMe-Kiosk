@@ -104,35 +104,53 @@ try {
 }
 
 ipcMain.on('activate', (event, slot) => {
-  console.log('Activate '+ slot)
-  if (relay != undefined) {
-    relay.setState(slot, true);
-    event.returnValue = 'ok'
-  } else {
+  try {
+    console.log('Activate ' + slot)
+    if (relay != undefined) {
+      relay.setState(slot, true);
+      event.returnValue = 'ok'
+    } else {
+      event.returnValue = 'nok'
+    }
+  } catch (e) {
+    console.log("Activate failed: ", e)
+    relay = undefined
     event.returnValue = 'nok'
   }
 })
 
 ipcMain.on('deactivate', (event, slot) => {
-  console.log('Deactivate '+ slot)
-  if (relay != undefined) {
-    relay.setState(slot, false);
-    event.returnValue = 'ok'
-  } else {
+  try {
+    console.log('Deactivate ' + slot)
+    if (relay != undefined) {
+      relay.setState(slot, false);
+      event.returnValue = 'ok'
+    } else {
+      event.returnValue = 'nok'
+    }
+  } catch (e) {
+    console.log("Deactivate failed: ", e)
+    relay = undefined
     event.returnValue = 'nok'
   }
 })
 
 ipcMain.on('relays', (event, arg) => {
   console.log('Get relays')
-  // connect to first relay
-  const relays = USBRelay.Relays
-  console.log("usbRelay loaded: relays:", relays)
-  if (relays.length > 0 && relay == undefined) {
-    relay = new USBRelay();
-    console.log("Relay: ", relay)
-  } else if (relays.length == 0) {
-    relay = undefined;
+  try {
+    // connect to first relay
+    if (relay == undefined) {
+      relay = new USBRelay();
+      console.log("Relay: ", relay)
+    }
+    const relays = USBRelay.Relays
+    console.log("usbRelay loaded: relays:", relays)
+    event.returnValue = relays
+
+  } catch (e) {
+    console.log("Get Relays failed: ", e)
+    relay = undefined
+    event.returnValue = []
   }
-  event.returnValue = relays
+
 })

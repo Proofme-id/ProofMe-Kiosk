@@ -21,6 +21,8 @@ apps:
       - pulseaudio
       - wayland
       - x11-plug
+      - hidraw
+      - hardware-observe
 
 environment:
   XWAYLAND_FULLSCREEN_WINDOW_HINT: window_role="browser-window"
@@ -63,8 +65,12 @@ parts:
       - libx11-xcb1
       - libxss1
       - libxtst6
+      - libudev-dev
+      - libusb-1.0-0
     build-packages:
       - unzip
+      - libudev-dev
+      - libusb-1.0-0-dev
 
   # Adapted from snapcraft-desktop-helpers https://github.com/ubuntu/snapcraft-desktop-helpers/blob/master/snapcraft.yaml#L183
   desktop-gtk3:

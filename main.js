@@ -87,37 +87,55 @@ catch (e) {
     console.log("Could not switch relay:", e);
 }
 electron_1.ipcMain.on('activate', function (event, slot) {
-    console.log('Activate ' + slot);
-    if (relay != undefined) {
-        relay.setState(slot, true);
-        event.returnValue = 'ok';
+    try {
+        console.log('Activate ' + slot);
+        if (relay != undefined) {
+            relay.setState(slot, true);
+            event.returnValue = 'ok';
+        }
+        else {
+            event.returnValue = 'nok';
+        }
     }
-    else {
+    catch (e) {
+        console.log("Activate failed: ", e);
+        relay = undefined;
         event.returnValue = 'nok';
     }
 });
 electron_1.ipcMain.on('deactivate', function (event, slot) {
-    console.log('Deactivate ' + slot);
-    if (relay != undefined) {
-        relay.setState(slot, false);
-        event.returnValue = 'ok';
+    try {
+        console.log('Deactivate ' + slot);
+        if (relay != undefined) {
+            relay.setState(slot, false);
+            event.returnValue = 'ok';
+        }
+        else {
+            event.returnValue = 'nok';
+        }
     }
-    else {
+    catch (e) {
+        console.log("Deactivate failed: ", e);
+        relay = undefined;
         event.returnValue = 'nok';
     }
 });
 electron_1.ipcMain.on('relays', function (event, arg) {
     console.log('Get relays');
-    // connect to first relay
-    var relays = USBRelay.Relays;
-    console.log("usbRelay loaded: relays:", relays);
-    if (relays.length > 0 && relay == undefined) {
-        relay = new USBRelay();
-        console.log("Relay: ", relay);
+    try {
+        // connect to first relay
+        if (relay == undefined) {
+            relay = new USBRelay();
+            console.log("Relay: ", relay);
+        }
+        var relays = USBRelay.Relays;
+        console.log("usbRelay loaded: relays:", relays);
+        event.returnValue = relays;
     }
-    else if (relays.length == 0) {
+    catch (e) {
+        console.log("Get Relays failed: ", e);
         relay = undefined;
+        event.returnValue = [];
     }
-    event.returnValue = relays;
 });
 //# sourceMappingURL=main.js.map
