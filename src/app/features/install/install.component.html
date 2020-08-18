@@ -1,13 +1,19 @@
-
+<div class="top-container">
+    <h1>{{ title }}</h1>
+</div>
 
 <div class="container" *ngIf="screen == 'welcome'">
-    <img src="./assets/images/proofme.ID-white.png">
-    <h1 class="title">
-        {{ 'PAGES.INSTALL.WELCOME' | translate }}
-    </h1>
-    <section>
-        <button type="button" (click)="setScreen('selectCountry')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>
-    </section>
+    <div class="top-div"> {{ 'PAGES.INSTALL.WELCOME' | translate }} </div>
+    <div class="center-div">
+        <img src="./assets/images/proofme.ID-white.png">
+    </div>
+    <div class="bottom-div">
+<!--        <section>-->
+<!--            <button type="button" (click)="setScreen('selectCountry')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>-->
+<!--        </section>-->
+    </div>
+
+
 </div>
 
 <div class="container" *ngIf="screen == 'selectCountry'">
@@ -24,36 +30,36 @@
             </mat-select>
         </mat-form-field>
     </form>
-    <section>
-        <button type="button" (click)="setScreen('selectLanguage')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>
-    </section>
+<!--    <section>-->
+<!--        <button type="button" (click)="setScreen('selectLanguage')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>-->
+<!--    </section>-->
 </div>
 
 <div class="container" *ngIf="screen == 'selectLanguage'">
     <h1 class="title">
         {{ 'PAGES.INSTALL.SELECT_LANGUAGE' | translate }}
     </h1>
-    <section>
-        <button type="button" (click)="setScreen('selectInternet')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>
-    </section>
+<!--    <section>-->
+<!--        <button class="blue-button" type="button" (click)="setScreen('selectInternet')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>-->
+<!--    </section>-->
 </div>
 
 <div class="container" *ngIf="screen == 'selectInternet'">
     <h1 class="title">
         {{ 'PAGES.INSTALL.SELECT_INTERNET' | translate }}
     </h1>
-    <section>
-        <button type="button" (click)="setScreen('selectType')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>
-    </section>
+<!--    <section>-->
+<!--        <button type="button" (click)="setScreen('selectType')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>-->
+<!--    </section>-->
 </div>
 
 <div class="container" *ngIf="screen == 'selectType'">
     <h1 class="title">
         {{ 'PAGES.INSTALL.SELECT_TYPE' | translate }}
     </h1>
-    <section>
-        <button type="button" (click)="setScreen('addAdmin')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>
-    </section>
+<!--    <section>-->
+<!--        <button type="button" (click)="setScreen('addAdmin')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>-->
+<!--    </section>-->
 </div>
 
 <div class="container" [hidden]="screen !== 'addAdmin'">
@@ -79,4 +85,17 @@
     <br>
     <b>Signing key was not valid</b>
     <p class="did-failed-text" (click)="retry()"><b>Retry</b></p>
+</div>
+
+<div class="bottom-container">
+    <div class="bottom-left-div">
+    </div>
+
+    <div class="bottom-center-div">
+
+    </div>
+
+    <div class="bottom-right-div">
+        <button *ngIf="next != null" class="blue-button" type="button" (click)="setScreen(next)">{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }}</button>
+    </div>
 </div>

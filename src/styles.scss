@@ -40,12 +40,126 @@ html, body {
   color: white;
 }
 
-.container {
-  height: 100%;
+.top-container {
+  height: 10vh;
+  width: 100%;
+  background-color: white;
+  color: #3498db;
+  text-align: center;
+  -webkit-border-bottom-right-radius: 2vh;
+  border-bottom-right-radius: 2vh;
+  -webkit-border-bottom-left-radius: 2vh;
+  border-bottom-left-radius: 2vh;
+
+  h1 {
+    font-size: 4vh;
+    padding: 3vh 0 0 0;
+    margin: 0;
+  }
+}
+
+.bottom-container {
+  text-align: right;
+  height: 10vh;
+  display: flex;
+  width: 100%;
+  margin-top: -10vh;
+  background-color: white;
+  color: #3498db;
+  -webkit-border-top-right-radius: 2vh;
+  border-top-right-radius: 2vh;
+  -webkit-border-top-left-radius: 2vh;
+  border-top-left-radius: 2vh;
+}
+
+.top-div {
+  height: 20vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.center-div {
+  height: 40vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottom-div {
+  height: 20vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottom-left-div {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  width: 30%;
+}
+
+.bottom-center-div {
+  width: 30%;
+}
+
+.bottom-right-div {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  width: 30%;
+}
+
+.align-right {
+  width: 100%;
+  text-align: right;
+}
+
+.blue-button {
+  display: block;
+  width: 30vw;
+  height: 6vh;
+  background: #3498db;
+  border: none;
+  color: #fff;
+  font-size: 2vh;
+  font-weight: bold;
+  margin: 2vh;
+
+  -webkit-border-radius: 1vh;
+  -moz-border-radius: 1vh;
+  border-radius: 1vh;
+}
+
+.white-button {
+  display: block;
+  width: 30vw;
+  height: 6vh;
+  background: #fff;
+  border: none;
+  color: #3498db;
+  font-size: 2vh;
+  font-weight: bold;
+  margin: 2vh;
+
+  -webkit-border-radius: 1vh;
+  -moz-border-radius: 1vh;
+  border-radius: 1vh;
+}
+
+.container {
+  top: 0;
+  left: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: -10vh;
 
   .title {
     font-size: 5vw;

@@ -21,6 +21,8 @@ export class InstallComponent implements OnInit {
     uuid: string = null;
     selectedCountry: string;
     screen: string = "welcome";
+    next: string = "selectCountry";
+    title = "Installation";
 
     @ViewChild('qrCodeCanvas', {static: false})
     qrCodeCanvas: ElementRef;
@@ -65,8 +67,22 @@ export class InstallComponent implements OnInit {
         this.launchWebsocketClient();
     }
 
-    setScreen(screen: string) {
-        this.screen = screen;
+    setScreen(next: string) {
+        this.screen = next;
+        if (next == 'selectCountry') {
+            this.next = 'selectLanguage';
+        }  else if (next == 'selectLanguage') {
+            this.next = 'selectInternet';
+        } else if (next == 'selectInternet') {
+            this.next = 'selectType';
+        } else if (next == 'selectType') {
+            this.next = 'addAdmin';
+        } else if (next == 'addAdmin') {
+            this.next = null;
+        } else {
+            this.next = null;
+        }
+
     }
 
     async generateQRCode(uuid: string) {
