@@ -45,8 +45,6 @@ parts:
     build-environment:
       - PATH: $PATH:$SNAPCRAFT_PART_BUILD/../npm/bin
       - NG_CLI_ANALYTICS: "ci"
-    override-pull: |
-      snapcraftctl pull
     override-build: |
       case $SNAPCRAFT_ARCH_TRIPLET in
         "i386-linux-gnu") outputDir="linux-ia32-unpacked";;

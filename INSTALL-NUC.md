@@ -64,12 +64,17 @@ Public SSH keys were added to the device for remote access.
 `ssh <Ubuntu SSO user name>@<device IP address>`
 - Your user name is your Ubuntu SSO user name, it has been reminded to you at the end of the account configuration step.
 
+# Install / config mir-kiosk
+Install the latest version of mir-kiosk  
+`snap install mir-kiosk --channel latest/edge`  
+Add `orientation: left` (or right) to the  correct display port in `/writable/system-data/var/snap/mir-kiosk/current/miral-kiosk.display`
+
 # Install ProofMe Kiosk
-- run the ProofMe Kiosk Snap from the store
-`snap install mir-kiosk proofme-kiosk`
+- run the ProofMe Kiosk Snap from the store  
+`snap install proofme-kiosk`
 - **ProofMe Kiosk is installed**
 
-# Allow usb Access
-`sudo snap connect proofme-kiosk:hardware-observe core:hardware-observe`
-`sudo snap connect proofme-kiosk:raw-usb core:raw-usb`
-`sudo snap connect proofme-kiosk:hidraw core:hidraw`
+
+# Allow usb Access (needed for access management)
+`sudo snap connect proofme-kiosk:hardware-observe core:hardware-observe`  
+`sudo snap connect proofme-kiosk:hidraw core:hidraw`  
