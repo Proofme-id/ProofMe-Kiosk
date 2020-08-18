@@ -12,7 +12,14 @@ function createWindow(): BrowserWindow {
 
 
   const electronScreen = screen;
+  const display = electronScreen.getPrimaryDisplay();
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
+
+  console.log("Display: ")
+  console.log("Width: " + size.width)
+  console.log("Height: " + size.height)
+  console.log("Rotate: " + display.rotation)
+
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -20,6 +27,7 @@ function createWindow(): BrowserWindow {
     y: 0,
     width: size.width,
     height: size.height,
+    // rotation: display.rotation,
     frame: false,
     webPreferences: {
       nodeIntegration: true,
@@ -27,9 +35,9 @@ function createWindow(): BrowserWindow {
     },
   });
 
-  win.webContents.openDevTools();
-
   if (serve) {
+
+    win.webContents.openDevTools();
 
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/node_modules/electron`)

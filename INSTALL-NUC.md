@@ -68,3 +68,8 @@ Public SSH keys were added to the device for remote access.
 - run the ProofMe Kiosk Snap from the store
 `snap install mir-kiosk proofme-kiosk`
 - **ProofMe Kiosk is installed**
+
+# Allow usb Access
+`sudo snap connect proofme-kiosk:hardware-observe core:hardware-observe`
+`sudo snap connect proofme-kiosk:raw-usb core:raw-usb`
+`sudo snap connect proofme-kiosk:hidraw core:hidraw`

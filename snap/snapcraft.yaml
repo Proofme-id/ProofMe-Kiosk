@@ -4,7 +4,7 @@ summary: ProofMe Kiosk
 description: |
   ProofMe Kiosk is a simple, secure and privacy proof kiosk.
 base: core18
-confinement: strict
+confinement: devmode
 grade: devel
 
 apps:
@@ -23,6 +23,9 @@ apps:
       - x11-plug
       - hidraw
       - hardware-observe
+      - raw-usb
+      - removable-media
+      - camera
 
 environment:
   XWAYLAND_FULLSCREEN_WINDOW_HINT: window_role="browser-window"
@@ -67,6 +70,8 @@ parts:
       - libxtst6
       - libudev-dev
       - libusb-1.0-0
+      - libhidapi-hidraw0
+      - libhidapi-libusb0
     build-packages:
       - unzip
       - libudev-dev

@@ -9,7 +9,12 @@ var win = null;
 var args = process.argv.slice(1), serve = args.some(function (val) { return val === '--serve'; });
 function createWindow() {
     var electronScreen = electron_1.screen;
+    var display = electronScreen.getPrimaryDisplay();
     var size = electronScreen.getPrimaryDisplay().workAreaSize;
+    console.log("Display: ");
+    console.log("Width: " + size.width);
+    console.log("Height: " + size.height);
+    console.log("Rotate: " + display.rotation);
     // Create the browser window.
     win = new electron_1.BrowserWindow({
         x: 0,
