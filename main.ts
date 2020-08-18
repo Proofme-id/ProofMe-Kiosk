@@ -14,21 +14,33 @@ function createWindow(): BrowserWindow {
   const electronScreen = screen;
   const display = electronScreen.getPrimaryDisplay();
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
+  let width;
+  let height;
 
   console.log("Display: ")
   console.log("Width: " + size.width)
   console.log("Height: " + size.height)
   console.log("Rotate: " + display.rotation)
 
+  if (serve) {
+    // Display normal on development screens
+    width = size.width;
+    height = size.height;
+  } else {
+    // rotate on prod environment
+    width = size.height;
+    height = size.width;
+  }
+
 
   // Create the browser window.
   win = new BrowserWindow({
     x: 0,
     y: 0,
-    width: size.width,
-    height: size.height,
-    // rotation: display.rotation,
+    width: width,
+    height: height,
     frame: false,
+    kiosk: true,
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve) ? true : false,
