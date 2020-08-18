@@ -10,7 +10,11 @@ var args = process.argv.slice(1), serve = args.some(function (val) { return val 
 function createWindow() {
     var electronScreen = electron_1.screen;
     var display = electronScreen.getPrimaryDisplay();
+    var displays = electronScreen.getAllDisplays();
+    console.log("Displays:" + JSON.stringify(displays));
     var size = electronScreen.getPrimaryDisplay().workAreaSize;
+    var width;
+    var height;
     console.log("Display: ");
     console.log("Width: " + size.width);
     console.log("Height: " + size.height);
@@ -19,16 +23,19 @@ function createWindow() {
     win = new electron_1.BrowserWindow({
         x: 0,
         y: 0,
-        width: size.width,
-        height: size.height,
+        // width: (serve) ? size.width : size.height,
+        // height: (serve) ? size.height : size.width,
+        height: (serve) ? size.width : size.height,
+        width: (serve) ? size.height : size.width,
         frame: false,
+        kiosk: (serve) ? false : true,
         webPreferences: {
             nodeIntegration: true,
             allowRunningInsecureContent: (serve) ? true : false,
         },
     });
-    win.webContents.openDevTools();
     if (serve) {
+        win.webContents.openDevTools();
         require('electron-reload')(__dirname, {
             electron: require(__dirname + "/node_modules/electron")
         });
