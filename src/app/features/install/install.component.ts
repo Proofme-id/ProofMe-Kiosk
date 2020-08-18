@@ -5,6 +5,7 @@ import * as QRCode from 'qrcode';
 import * as crypto from 'crypto';
 import { ConfigProvider } from 'app/providers/configProvider';
 import { Web3Provider } from 'app/providers/web3Provider';
+const { width, height } = require("screenz");
 
 interface Country {
     value: string;
@@ -34,6 +35,8 @@ export class InstallComponent implements OnInit {
     waitingMenu = false;
     kioskAdminChallenge = null;
 
+    qrCodeWidth: number;
+
     constructor(
         private router: Router,
         private storageService: StorageService,
@@ -41,6 +44,11 @@ export class InstallComponent implements OnInit {
         private configProvider: ConfigProvider,
         private web3Provider: Web3Provider
     ) {
+        if (width > height) {
+            this.qrCodeWidth = height / 2;
+        } else {
+            this.qrCodeWidth = width / 2;
+        }
 
     }
 
@@ -64,7 +72,7 @@ export class InstallComponent implements OnInit {
     async generateQRCode(uuid: string) {
         const canvas = this.qrCodeCanvas.nativeElement as HTMLCanvasElement;
         QRCode.toCanvas(canvas, 'p2p:' + uuid, {
-            width: 400
+            width: this.qrCodeWidth
         });
         console.log('Challenge QR code displayed');
     }
