@@ -23,8 +23,8 @@ function createWindow() {
     win = new electron_1.BrowserWindow({
         x: 0,
         y: 0,
-        width: (serve) ? size.width : size.height,
-        height: (serve) ? size.height : size.width,
+        width: size.width,
+        height: size.height,
         frame: false,
         kiosk: (serve) ? false : true,
         webPreferences: {

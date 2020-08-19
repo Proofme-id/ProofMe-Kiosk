@@ -7,7 +7,12 @@ import { ConfigProvider } from 'app/providers/configProvider';
 import { Web3Provider } from 'app/providers/web3Provider';
 const { width, height } = require("screenz");
 
-interface Country {
+interface Timezone {
+    value: string;
+    viewValue: string;
+}
+
+interface Languages {
     value: string;
     viewValue: string;
 }
@@ -19,11 +24,14 @@ interface Country {
 })
 export class InstallComponent implements OnInit {
     uuid: string = null;
-    selectedCountry: string;
     screen: string = "welcome";
-    next: string = "selectCountry";
+    next: string = "selectTimezone";
     prev: string = null;
-    title = "Installation";
+
+    // config  parameters
+    selectedTimezone: string;
+    selectedLanguage: string;
+    selectedKioskType: string;
 
     @ViewChild('qrCodeCanvas', {static: false})
     qrCodeCanvas: ElementRef;
@@ -55,9 +63,22 @@ export class InstallComponent implements OnInit {
 
     }
 
-    countries: Country[] = [
+    timezones: Timezone[] = [
         {value: 'US', viewValue: 'United States'},
+        {value: 'NL', viewValue: 'Netherlands'},
+        {value: 'NL', viewValue: 'Netherlands'},
+        {value: 'NL', viewValue: 'Netherlands'},
+        {value: 'NL', viewValue: 'Netherlands'},
+        {value: 'NL', viewValue: 'Netherlands'},
+        {value: 'NL', viewValue: 'Netherlands'},
+        {value: 'NL', viewValue: 'Netherlands'},
+        {value: 'NL', viewValue: 'Netherlands'},
         {value: 'NL', viewValue: 'Netherlands'}
+    ];
+
+    languages: Languages[] = [
+        {value: 'EN', viewValue: 'English'},
+        {value: 'NL', viewValue: 'Nederlands'}
     ];
 
     async ngOnInit(): Promise<void> {
@@ -71,14 +92,14 @@ export class InstallComponent implements OnInit {
     setScreen(screen: string) {
         this.screen = screen;
         if (screen == 'welcome') {
-            this.next = 'selectCountry';
+            this.next = 'selectTimezone';
             this.prev = null;
-        } else if (screen == 'selectCountry') {
+        } else if (screen == 'selectTimezone') {
             this.next = 'selectLanguage';
             this.prev = 'welcome';
         } else if (screen == 'selectLanguage') {
             this.next = 'selectInternet';
-            this.prev = 'selectCountry';
+            this.prev = 'selectTimezone';
         } else if (screen == 'selectInternet') {
             this.next = 'selectType';
             this.prev = 'selectLanguage';

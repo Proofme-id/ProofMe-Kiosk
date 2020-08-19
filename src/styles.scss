@@ -151,6 +151,39 @@ html, body {
   border-radius: 1vh;
 }
 
+.proofme-selector {
+  color: rgba(255, 255, 255, 0.87);
+  font-size: 2vh;
+  width: 60vw;
+}
+
+.mat-form-field-type-mat-select .mat-form-field-label, .mat-select-value {
+  color: rgba(255, 255, 255, 0.87);
+  font-size: 2vh;
+}
+
+.proofme-selector.mat-form-field {
+  background: #006599 !important;
+  color: rgba(255, 255, 255, 0.87);
+  font-size: 2vh;
+  width: 60vw;
+}
+
+.proofme-selector.mat-select-panel {
+  background: #3498db;
+  color: rgba(255, 255, 255, 0.87);
+  font-size: 2vh;
+  width: 60vw;
+  max-height: 50vh;
+}
+
+.title {
+  font-size: 5vw;
+  color: white;
+  margin: 0;
+  padding: 10px 20px;
+}
+
 .container {
   top: 0;
   left: 0;
@@ -160,13 +193,6 @@ html, body {
   align-items: center;
   justify-content: center;
   margin-top: -10vh;
-
-  .title {
-    font-size: 5vw;
-    color: white;
-    margin: 0;
-    padding: 10px 20px;
-  }
 
   a {
     color: #fff !important;

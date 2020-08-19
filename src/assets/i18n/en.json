@@ -1,8 +1,9 @@
 {
   "PAGES": {
       "INSTALL": {
-        "WELCOME": "Welcome to the ProofMe Kiosk",
-        "SELECT_COUNTRY": "Select location",
+        "WELCOME": "Welcome",
+        "WELCOME_MSG": "Click NEXT to setup the ProofMe Kiosk",
+        "SELECT_TIMEZONE": "Select timezone",
         "SELECT_LANGUAGE": "Select language",
         "SELECT_INTERNET": "Setup connection",
         "SELECT_TYPE": "Setup kiosk type",
