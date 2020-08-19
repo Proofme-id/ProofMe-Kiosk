@@ -8,9 +8,8 @@ confinement: devmode
 grade: devel
 architectures:
   - build-on: arm64
-  - build-on: armhf
+#  - build-on: armhf
   - build-on: amd64
-  - build-on: i386
 
 apps:
   proofme-kiosk:
@@ -50,6 +49,7 @@ parts:
     build-environment:
       - PATH: $PATH:$SNAPCRAFT_PART_BUILD/../npm/bin
       - NG_CLI_ANALYTICS: "ci"
+      - ELECTRON_GET_USE_PROXY: "1"
     override-build: |
       case $SNAPCRAFT_ARCH_TRIPLET in
         "i386-linux-gnu") outputDir="linux-ia32-unpacked";;
