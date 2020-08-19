@@ -2,8 +2,9 @@
     <h1>{{ 'PAGES.HOME.TITLE' | translate }}</h1>
 </div>
 
-<div class="container" *ngIf="status == 0">
-    <img src="./assets/images/proofme.ID-white.png">
+<div class="container" [hidden]="status !== 1">
+<!--    <img src="./assets/images/proofme.ID-white.png">-->
+    <video class="video" id="video" autoplay="true" playsinline="true"></video>
     <h2 class="title">
         {{ 'PAGES.HOME.TITLE2' | translate }}
     </h2>
