@@ -1,7 +1,8 @@
 :host {
   img {
     height: auto;
-    max-width: 40%;
+    max-width: 80vw;
+    max-height: 60vh;
   }
 
   .container.success {
@@ -10,33 +11,6 @@
 
   .container.error {
     background: indianred;
-  }
-
-  .footer-main-div {
-    height: 100px;
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-between;
-    margin-top: -100px;
-  }
-
-  .footer-left-div {
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    width: 30%;
-  }
-
-  .footer-center-div {
-    width: 30%;
-  }
-
-  .footer-right-div {
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    width: 30%;
   }
 
   fa-icon {

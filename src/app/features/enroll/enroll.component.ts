@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+const { width, height } = require("screenz");
 
 @Component({
     selector: 'app-enroll',
@@ -8,10 +9,18 @@ import { Router } from '@angular/router';
 })
 export class EnrollComponent implements OnInit {
 
-    constructor(private router: Router) { }
+    qrCodeWidth: number;
+
+    constructor(private router: Router) {
+    }
 
     ngOnInit(): void {
-
+        if (width > height) {
+            this.qrCodeWidth = height / 2;
+        } else {
+            this.qrCodeWidth = width / 2;
+        }
+        console.log("QR code width:" + this.qrCodeWidth)
     }
 
     goToHome() {

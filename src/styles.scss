@@ -40,6 +40,10 @@ html, body {
   color: white;
 }
 
+.mat-column-select {
+  overflow: initial;
+}
+
 .top-container {
   height: 10vh;
   width: 100%;
@@ -50,6 +54,8 @@ html, body {
   border-bottom-right-radius: 2vh;
   -webkit-border-bottom-left-radius: 2vh;
   border-bottom-left-radius: 2vh;
+  z-index: 1;
+  position: relative;
 
   h1 {
     font-size: 4vh;
@@ -70,6 +76,7 @@ html, body {
   border-top-right-radius: 2vh;
   -webkit-border-top-left-radius: 2vh;
   border-top-left-radius: 2vh;
+  z-index: 1;
 }
 
 .top-div {
@@ -157,6 +164,12 @@ html, body {
   width: 60vw;
 }
 
+.mat-icon {
+  height: auto !important;
+  width: auto !important;
+  font-size: 6vh;
+}
+
 .mat-form-field-type-mat-select .mat-form-field-label, .mat-select-value {
   color: rgba(255, 255, 255, 0.87);
   font-size: 2vh;
@@ -193,6 +206,7 @@ html, body {
   align-items: center;
   justify-content: center;
   margin-top: -10vh;
+  z-index: 2;
 
   a {
     color: #fff !important;

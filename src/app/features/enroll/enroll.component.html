@@ -1,9 +1,26 @@
-<div class="top-bar">
-    <fa-icon [icon]="['fas', 'arrow-left']" size="4x" class="back-arrow" (click)="goToHome()"></fa-icon>
+<div class="top-container">
+    <h1>{{ 'PAGES.ENROLL.TITLE' | translate }}</h1>
 </div>
 
 <div class="container">
-    <p>Welcome, you can enroll your biometrics here</p>
-    <img src="./assets/images/share-biometrics-qr.png">
-    <p class="qr-code-text">Scan this QR code with the<br /><b>ProofMe.ID App</b></p>
+    <div class="center-div">
+        <img class="qrCode" src="./assets/images/share-biometrics-qr.png">
+    </div>
+    <div class="bottom-div">
+        <h1 class="title">{{ 'PAGES.INSTALL.ADD_ADMIN_TEXT' | translate }}</h1>
+        <h1 class="title"><b>{{ 'PAGES.INSTALL.PROOFME_APP' | translate }}</b></h1>
+    </div>
+</div>
+
+<div class="bottom-container">
+    <div class="bottom-left-div">
+        <mat-icon class="footer" aria-hidden="false" aria-label="Enroll" (click)="goToHome()">arrow_back</mat-icon>
+    </div>
+
+    <div class="bottom-center-div">
+
+    </div>
+
+    <div class="bottom-right-div">
+    </div>
 </div>

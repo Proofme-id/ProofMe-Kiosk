@@ -1,22 +1,7 @@
 :host {
-    .top-bar {
-        background-color: white;
-        color: #006599;
-        padding-top: 20px;
-        padding-bottom: 20px;
-        position: absolute;
-        right: 0;
-        left: 0;
-    }
-
-    .back-arrow {
-        color: #006599;
-        padding-left: 20px;
-
-        &:hover {
-            cursor: pointer;
-            opacity: 0.5;
-        }
+    .qrCode {
+        width: 40vh;
+        height: auto;
     }
 
     .qr-code-text {
