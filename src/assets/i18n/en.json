@@ -9,7 +9,8 @@
         "ADD_ADMIN": "Create admin account",
         "ADD_ADMIN_TEXT": "Scan the QR Code with the",
         "PROOFME_APP": "ProofMe App",
-        "NEXT_BUTTON": "continue",
+        "PREV_BUTTON": "BACK",
+        "NEXT_BUTTON": "NEXT",
         "TITLE": "Installation"
       },
       "HOME": {

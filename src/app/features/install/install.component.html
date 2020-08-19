@@ -8,9 +8,6 @@
         <img src="./assets/images/proofme.ID-white.png">
     </div>
     <div class="bottom-div">
-<!--        <section>-->
-<!--            <button type="button" (click)="setScreen('selectCountry')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>-->
-<!--        </section>-->
     </div>
 
 
@@ -89,6 +86,7 @@
 
 <div class="bottom-container">
     <div class="bottom-left-div">
+        <button *ngIf="prev != null" class="blue-button" type="button" (click)="setScreen(prev)">{{ 'PAGES.INSTALL.PREV_BUTTON' | translate }}</button>
     </div>
 
     <div class="bottom-center-div">
