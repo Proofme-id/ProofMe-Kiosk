@@ -9,6 +9,10 @@
   src: url('./assets/woff/maticon.woff2') format('woff2');
 }
 
+[hidden] {
+  display: none !important;
+}
+
 .material-icons {
   font-family: 'Material Icons';
   font-weight: bold;

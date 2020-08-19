@@ -105,11 +105,11 @@ try {
 try {
   relay = new USBRelay();
   console.log("Relay: ", relay)
-  relay.setState(1, true);
-
-  setTimeout(function () {
-    relay.setState(1, false);
-  }, 1000);
+  // relay.setState(1, true);
+  //
+  // setTimeout(function () {
+  //   relay.setState(1, false);
+  // }, 1000);
 } catch (e) {
   console.log("Could not switch relay:", e)
 }
