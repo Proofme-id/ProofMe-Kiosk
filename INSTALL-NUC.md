@@ -78,3 +78,4 @@ Add `orientation: left` (or right) to the  correct display port in `/writable/sy
 # Allow usb Access (needed for access management)
 `sudo snap connect proofme-kiosk:hardware-observe core:hardware-observe`  
 `sudo snap connect proofme-kiosk:hidraw core:hidraw`  
+`sudo snap connect proofme-kiosk:camera core:camera`
