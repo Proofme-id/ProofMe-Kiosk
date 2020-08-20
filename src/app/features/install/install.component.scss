@@ -1,15 +1,8 @@
 :host {
     img {
         height: auto;
-        max-width: 40%;
-    }
-
-    .container.success {
-        background: forestgreen;
-    }
-
-    .container.error {
-        background: indianred;
+        max-width: 80vw;
+        max-height: 60vh;
     }
     
     .qr-code-text {
@@ -58,21 +51,7 @@
     section {
         margin: 0 auto;
     }
-    button {
-        display: block;
-        width: 400px;
-        height: 80px;
-        margin: 80px 0;
-        background: #fff;
-        border: none;
-        color: #3498db;
-        font-size: 28px;
-        font-weight: bold;
 
-        -webkit-border-radius: 15px;
-        -moz-border-radius: 15px;
-        border-radius: 15px;
-    }
     span {
         padding-left: 20px;
     }

@@ -12,7 +12,14 @@ function createWindow(): BrowserWindow {
 
 
   const electronScreen = screen;
+  const display = electronScreen.getPrimaryDisplay();
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
+
+
+  console.log("Display: ")
+  console.log("Width: " + size.width)
+  console.log("Height: " + size.height)
+  console.log("Rotate: " + display.rotation)
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -21,15 +28,16 @@ function createWindow(): BrowserWindow {
     width: size.width,
     height: size.height,
     frame: false,
+    kiosk: (!serve),
     webPreferences: {
       nodeIntegration: true,
-      allowRunningInsecureContent: (serve) ? true : false,
+      allowRunningInsecureContent: (serve),
     },
   });
 
-  win.webContents.openDevTools();
-
   if (serve) {
+
+    win.webContents.openDevTools();
 
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/node_modules/electron`)
@@ -40,7 +48,7 @@ function createWindow(): BrowserWindow {
     win.loadURL(url.format({
       pathname: path.join(__dirname, 'dist/index.html'),
       protocol: 'file:',
-      slashes: true
+      slashes: true,
     }));
   }
 
@@ -94,45 +102,63 @@ try {
 try {
   relay = new USBRelay();
   console.log("Relay: ", relay)
-  relay.setState(1, true);
-
-  setTimeout(function () {
-    relay.setState(1, false);
-  }, 1000);
+  // relay.setState(1, true);
+  //
+  // setTimeout(function () {
+  //   relay.setState(1, false);
+  // }, 1000);
 } catch (e) {
   console.log("Could not switch relay:", e)
 }
 
 ipcMain.on('activate', (event, slot) => {
-  console.log('Activate '+ slot)
-  if (relay != undefined) {
-    relay.setState(slot, true);
-    event.returnValue = 'ok'
-  } else {
+  try {
+    console.log('Activate ' + slot)
+    if (relay != undefined) {
+      relay.setState(slot, true);
+      event.returnValue = 'ok'
+    } else {
+      event.returnValue = 'nok'
+    }
+  } catch (e) {
+    console.log("Activate failed: ", e)
+    relay = undefined
     event.returnValue = 'nok'
   }
 })
 
 ipcMain.on('deactivate', (event, slot) => {
-  console.log('Deactivate '+ slot)
-  if (relay != undefined) {
-    relay.setState(slot, false);
-    event.returnValue = 'ok'
-  } else {
+  try {
+    console.log('Deactivate ' + slot)
+    if (relay != undefined) {
+      relay.setState(slot, false);
+      event.returnValue = 'ok'
+    } else {
+      event.returnValue = 'nok'
+    }
+  } catch (e) {
+    console.log("Deactivate failed: ", e)
+    relay = undefined
     event.returnValue = 'nok'
   }
 })
 
 ipcMain.on('relays', (event, arg) => {
   console.log('Get relays')
-  // connect to first relay
-  const relays = USBRelay.Relays
-  console.log("usbRelay loaded: relays:", relays)
-  if (relays.length > 0 && relay == undefined) {
-    relay = new USBRelay();
-    console.log("Relay: ", relay)
-  } else if (relays.length == 0) {
-    relay = undefined;
+  try {
+    // connect to first relay
+    if (relay == undefined) {
+      relay = new USBRelay();
+      console.log("Relay: ", relay)
+    }
+    const relays = USBRelay.Relays
+    console.log("usbRelay loaded: relays:", relays)
+    event.returnValue = relays
+
+  } catch (e) {
+    console.log("Get Relays failed: ", e)
+    relay = undefined
+    event.returnValue = []
   }
-  event.returnValue = relays
+
 })

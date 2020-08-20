@@ -15,7 +15,7 @@
   "main": "main.js",
   "private": true,
   "scripts": {
-    "postinstall": "electron-rebuild",
+    "postinstall": "ELECTRON_GET_USE_PROXY=true electron-rebuild",
     "postinstall2": "DEBUG=electron-builder electron-builder install-app-deps",
     "ng": "ng",
     "start": "npm-run-all -p electron:serve ng:serve",
@@ -75,7 +75,7 @@
     "conventional-changelog-cli": "2.0.34",
     "core-js": "3.6.5",
     "cross-env": "7.0.2",
-    "electron": "^9.1.2",
+    "electron": "^9.2.1",
     "electron-builder": "22.7.0",
     "electron-reload": "1.5.0",
     "eslint": "7.4.0",

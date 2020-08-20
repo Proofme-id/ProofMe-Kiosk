@@ -4,8 +4,12 @@ summary: ProofMe Kiosk
 description: |
   ProofMe Kiosk is a simple, secure and privacy proof kiosk.
 base: core18
-confinement: strict
+confinement: devmode
 grade: devel
+architectures:
+  - build-on: arm64
+#  - build-on: armhf
+  - build-on: amd64
 
 apps:
   proofme-kiosk:
@@ -21,6 +25,9 @@ apps:
       - pulseaudio
       - wayland
       - x11-plug
+      - hidraw
+      - hardware-observe
+      - camera
 
 environment:
   XWAYLAND_FULLSCREEN_WINDOW_HINT: window_role="browser-window"
@@ -40,9 +47,12 @@ parts:
     build-environment:
       - PATH: $PATH:$SNAPCRAFT_PART_BUILD/../npm/bin
       - NG_CLI_ANALYTICS: "ci"
-    override-pull: |
-      snapcraftctl pull
     override-build: |
+      if [ -n "$http_proxy" ]; then
+          export ELECTRON_GET_USE_PROXY=1
+          export GLOBAL_AGENT_HTTP_PROXY="${http_proxy}"
+          export GLOBAL_AGENT_HTTPS_PROXY="${http_proxy}"
+      fi
       case $SNAPCRAFT_ARCH_TRIPLET in
         "i386-linux-gnu") outputDir="linux-ia32-unpacked";;
         "x86_64-linux-gnu") outputDir="linux-unpacked";;
@@ -63,8 +73,14 @@ parts:
       - libx11-xcb1
       - libxss1
       - libxtst6
+      - libudev-dev
+      - libusb-1.0-0
+      - libhidapi-hidraw0
+      - libhidapi-libusb0
     build-packages:
       - unzip
+      - libudev-dev
+      - libusb-1.0-0-dev
 
   # Adapted from snapcraft-desktop-helpers https://github.com/ubuntu/snapcraft-desktop-helpers/blob/master/snapcraft.yaml#L183
   desktop-gtk3:

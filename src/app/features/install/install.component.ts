@@ -5,8 +5,14 @@ import * as QRCode from 'qrcode';
 import * as crypto from 'crypto';
 import { ConfigProvider } from 'app/providers/configProvider';
 import { Web3Provider } from 'app/providers/web3Provider';
+const { width, height } = require("screenz");
 
-interface Country {
+interface Timezone {
+    value: string;
+    viewValue: string;
+}
+
+interface Languages {
     value: string;
     viewValue: string;
 }
@@ -18,8 +24,14 @@ interface Country {
 })
 export class InstallComponent implements OnInit {
     uuid: string = null;
-    selectedCountry: string;
     screen: string = "welcome";
+    next: string = "selectTimezone";
+    prev: string = null;
+
+    // config  parameters
+    selectedTimezone: string;
+    selectedLanguage: string;
+    selectedKioskType: string;
 
     @ViewChild('qrCodeCanvas', {static: false})
     qrCodeCanvas: ElementRef;
@@ -34,6 +46,8 @@ export class InstallComponent implements OnInit {
     waitingMenu = false;
     kioskAdminChallenge = null;
 
+    qrCodeWidth: number;
+
     constructor(
         private router: Router,
         private storageService: StorageService,
@@ -41,12 +55,30 @@ export class InstallComponent implements OnInit {
         private configProvider: ConfigProvider,
         private web3Provider: Web3Provider
     ) {
+        if (width > height) {
+            this.qrCodeWidth = height / 2;
+        } else {
+            this.qrCodeWidth = width / 2;
+        }
 
     }
 
-    countries: Country[] = [
+    timezones: Timezone[] = [
         {value: 'US', viewValue: 'United States'},
+        {value: 'NL', viewValue: 'Netherlands'},
+        {value: 'NL', viewValue: 'Netherlands'},
+        {value: 'NL', viewValue: 'Netherlands'},
+        {value: 'NL', viewValue: 'Netherlands'},
+        {value: 'NL', viewValue: 'Netherlands'},
+        {value: 'NL', viewValue: 'Netherlands'},
+        {value: 'NL', viewValue: 'Netherlands'},
+        {value: 'NL', viewValue: 'Netherlands'},
         {value: 'NL', viewValue: 'Netherlands'}
+    ];
+
+    languages: Languages[] = [
+        {value: 'EN', viewValue: 'English'},
+        {value: 'NL', viewValue: 'Nederlands'}
     ];
 
     async ngOnInit(): Promise<void> {
@@ -59,12 +91,34 @@ export class InstallComponent implements OnInit {
 
     setScreen(screen: string) {
         this.screen = screen;
+        if (screen == 'welcome') {
+            this.next = 'selectTimezone';
+            this.prev = null;
+        } else if (screen == 'selectTimezone') {
+            this.next = 'selectLanguage';
+            this.prev = 'welcome';
+        } else if (screen == 'selectLanguage') {
+            this.next = 'selectInternet';
+            this.prev = 'selectTimezone';
+        } else if (screen == 'selectInternet') {
+            this.next = 'selectType';
+            this.prev = 'selectLanguage';
+        } else if (screen == 'selectType') {
+            this.next = 'addAdmin';
+            this.prev = 'selectInternet';
+        } else if (screen == 'addAdmin') {
+            this.next = null;
+            this.prev = 'selectType';
+        } else {
+            this.next = null;
+            this.prev = null;
+        }
     }
 
     async generateQRCode(uuid: string) {
         const canvas = this.qrCodeCanvas.nativeElement as HTMLCanvasElement;
         QRCode.toCanvas(canvas, 'p2p:' + uuid, {
-            width: 400
+            width: this.qrCodeWidth
         });
         console.log('Challenge QR code displayed');
     }

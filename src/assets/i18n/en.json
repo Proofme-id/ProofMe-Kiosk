@@ -1,15 +1,17 @@
 {
   "PAGES": {
       "INSTALL": {
-        "WELCOME": "Welcome to the ProofMe Kiosk",
-        "SELECT_COUNTRY": "Select location",
+        "WELCOME": "Welcome",
+        "WELCOME_MSG": "Click NEXT to setup the ProofMe Kiosk",
+        "SELECT_TIMEZONE": "Select timezone",
         "SELECT_LANGUAGE": "Select language",
         "SELECT_INTERNET": "Setup connection",
         "SELECT_TYPE": "Setup kiosk type",
         "ADD_ADMIN": "Create admin account",
         "ADD_ADMIN_TEXT": "Scan the QR Code with the",
         "PROOFME_APP": "ProofMe App",
-        "NEXT_BUTTON": "continue",
+        "PREV_BUTTON": "BACK",
+        "NEXT_BUTTON": "NEXT",
         "TITLE": "Installation"
       },
       "HOME": {
@@ -20,6 +22,9 @@
       },
       "CONFIG": {
         "TITLE": "Configuration"
+      },
+      "ENROLL": {
+      "TITLE": "Enroll"
     }
   }
 }

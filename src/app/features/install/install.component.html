@@ -1,67 +1,99 @@
-
-
-<div class="container" *ngIf="screen == 'welcome'">
-    <img src="./assets/images/proofme.ID-white.png">
-    <h1 class="title">
-        {{ 'PAGES.INSTALL.WELCOME' | translate }}
-    </h1>
-    <section>
-        <button type="button" (click)="setScreen('selectCountry')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>
-    </section>
+<div class="top-container">
+    <h1>{{ 'PAGES.INSTALL.TITLE' | translate }}</h1>
 </div>
 
-<div class="container" *ngIf="screen == 'selectCountry'">
-    <h1 class="title">
-        {{ 'PAGES.INSTALL.SELECT_COUNTRY' | translate }}
-    </h1>
-    <form>
-        <mat-form-field appearance="fill">
-            <mat-label>{{ 'PAGES.INSTALL.SELECT_COUNTRY' | translate }}</mat-label>
-            <mat-select [(ngModel)]="selectedCountry" name="food">
-                <mat-option *ngFor="let country of countries" [value]="country.value">
-                    {{country.viewValue}}
+<div class="container" *ngIf="screen == 'welcome'">
+    <div class="top-div">
+        <h1 class="title">{{ 'PAGES.INSTALL.WELCOME' | translate }}</h1>
+    </div>
+    <div class="center-div">
+        <img src="./assets/images/proofme.ID-white.png">
+        <h1 class="title">{{ 'PAGES.HOME.TITLE' | translate }}</h1>
+    </div>
+    <div class="bottom-div">
+
+    </div>
+</div>
+
+<div class="container" *ngIf="screen == 'selectTimezone'">
+    <div class="top-div">
+        <h1 class="title">
+            {{ 'PAGES.INSTALL.SELECT_TIMEZONE' | translate }}
+        </h1>
+    </div>
+    <div class="center-div">
+        <mat-form-field class="proofme-selector">
+            <mat-label>{{ 'PAGES.INSTALL.SELECT_TIMEZONE' | translate }}</mat-label>
+            <mat-select matNativeControl [(ngModel)]="selectedTimezone" name="timezone" panelClass="proofme-selector">
+                <mat-option *ngFor="let timezone of timezones" [value]="timezone.value">
+                    {{timezone.viewValue}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
-    </form>
-    <section>
-        <button type="button" (click)="setScreen('selectLanguage')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>
-    </section>
+    </div>
+    <div class="bottom-div">
+    </div>
 </div>
 
 <div class="container" *ngIf="screen == 'selectLanguage'">
-    <h1 class="title">
-        {{ 'PAGES.INSTALL.SELECT_LANGUAGE' | translate }}
-    </h1>
-    <section>
-        <button type="button" (click)="setScreen('selectInternet')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>
-    </section>
+    <div class="top-div">
+        <h1 class="title">
+            {{ 'PAGES.INSTALL.SELECT_LANGUAGE' | translate }}
+        </h1>
+    </div>
+    <div class="center-div">
+        <div class="center-div">
+            <mat-form-field class="proofme-selector">
+                <mat-label>{{ 'PAGES.INSTALL.SELECT_LANGUAGE' | translate }}</mat-label>
+                <mat-select matNativeControl [(ngModel)]="selectedLanguage" name="language" panelClass="proofme-selector">
+                    <mat-option *ngFor="let language of languages" [value]="language.value">
+                        {{language.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="bottom-div">
+    </div>
 </div>
 
 <div class="container" *ngIf="screen == 'selectInternet'">
-    <h1 class="title">
-        {{ 'PAGES.INSTALL.SELECT_INTERNET' | translate }}
-    </h1>
-    <section>
-        <button type="button" (click)="setScreen('selectType')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>
-    </section>
+    <div class="top-div">
+        <h1 class="title">
+            {{ 'PAGES.INSTALL.SELECT_INTERNET' | translate }}
+        </h1>
+    </div>
+    <div class="center-div">
+    </div>
+    <div class="bottom-div">
+    </div>
 </div>
 
 <div class="container" *ngIf="screen == 'selectType'">
-    <h1 class="title">
-        {{ 'PAGES.INSTALL.SELECT_TYPE' | translate }}
-    </h1>
-    <section>
-        <button type="button" (click)="setScreen('addAdmin')"><span>{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }} </span> <fa-icon class="info-icon" [icon]="['fas', 'arrow-right']"></fa-icon></button>
-    </section>
+    <div class="top-div">
+        <h1 class="title">
+            {{ 'PAGES.INSTALL.SELECT_TYPE' | translate }}
+        </h1>
+    </div>
+    <div class="center-div">
+    </div>
+    <div class="bottom-div">
+    </div>
 </div>
 
 <div class="container" [hidden]="screen !== 'addAdmin'">
-    <h1 class="title">
-        {{ 'PAGES.INSTALL.ADD_ADMIN' | translate }}
-    </h1>
-    <canvas #qrCodeCanvas></canvas>
-    <p class="qr-code-text">{{ 'PAGES.INSTALL.ADD_ADMIN_TEXT' | translate }}<br /><b>{{ 'PAGES.INSTALL.PROOFME_APP' | translate }}</b></p>
+    <div class="top-div">
+        <h1 class="title">
+            {{ 'PAGES.INSTALL.ADD_ADMIN' | translate }}
+        </h1>
+    </div>
+    <div class="center-div">
+        <canvas #qrCodeCanvas></canvas>
+    </div>
+    <div class="bottom-div">
+        <h1 class="title">{{ 'PAGES.INSTALL.ADD_ADMIN_TEXT' | translate }}</h1>
+        <h1 class="title"><b>{{ 'PAGES.INSTALL.PROOFME_APP' | translate }}</b></h1>
+    </div>
 </div>
 
 <div class="container qr-code" *ngIf="screen == 'connectedAdmin'">
@@ -79,4 +111,18 @@
     <br>
     <b>Signing key was not valid</b>
     <p class="did-failed-text" (click)="retry()"><b>Retry</b></p>
+</div>
+
+<div class="bottom-container">
+    <div class="bottom-left-div">
+        <button *ngIf="prev != null" class="blue-button" type="button" (click)="setScreen(prev)">{{ 'PAGES.INSTALL.PREV_BUTTON' | translate }}</button>
+    </div>
+
+    <div class="bottom-center-div">
+
+    </div>
+
+    <div class="bottom-right-div">
+        <button *ngIf="next != null" class="blue-button" type="button" (click)="setScreen(next)">{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }}</button>
+    </div>
 </div>

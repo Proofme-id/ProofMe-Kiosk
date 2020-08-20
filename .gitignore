@@ -6,3 +6,4 @@ node_modules
 .idea
 *.snap
 .data
+proofme-kiosk_*.txt

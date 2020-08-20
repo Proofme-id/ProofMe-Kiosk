@@ -1,11 +1,13 @@
-<div class="container" *ngIf="status == 0">
-    <img src="./assets/images/proofme.ID-white.png">
-    <h1 class="title">
-        {{ 'PAGES.HOME.TITLE' | translate }}
-    </h1>
-    <h2 class="title">
-        {{ 'PAGES.HOME.TITLE2' | translate }}
-    </h2>
+<div class="top-container">
+    <h1>{{ 'PAGES.HOME.TITLE' | translate }}</h1>
+</div>
+
+<div class="container" [hidden]="hideVideo">
+<!--    <img src="./assets/images/proofme.ID-white.png">-->
+    <video class="video" id="video" autoplay="true" playsinline="true"></video>
+<!--    <h2 class="title">-->
+<!--        {{ 'PAGES.HOME.TITLE2' | translate }}-->
+<!--    </h2>-->
 </div>
 
 <div class="container error" *ngIf="status == 2">
@@ -22,16 +24,17 @@
     </h1>
 </div>
 
-<div class="footer-main-div">
-    <div class="footer-left-div">
-        <fa-icon class="info-icon" [routerLink]="['/enroll']" [icon]="['fas', 'user-plus']" size="5x"></fa-icon>
+<div class="bottom-container">
+    <div class="bottom-left-div">
+        <mat-icon fontSet="material-icons-round" class="footer" aria-hidden="false" aria-label="Enroll" [routerLink]="['/enroll']">person_add_alt_1</mat-icon>
     </div>
 
-    <div class="footer-center-div">
-
+    <div class="bottom-center-div">
+        <mat-icon fontSet="material-icons-round" class="footer" aria-hidden="false" aria-label="Settings" (click)="setStatus(2)">close</mat-icon>
+        <mat-icon fontSet="material-icons-round" class="footer" aria-hidden="false" aria-label="Settings" (click)="setStatus(3)">check</mat-icon>
     </div>
 
-    <div class="footer-right-div">
-        <fa-icon class="info-icon" [routerLink]="['/config']" [icon]="['fas', 'cog']" size="5x"></fa-icon>
+    <div class="bottom-right-div">
+        <mat-icon class="footer" aria-hidden="false" aria-label="Settings" [routerLink]="['/config']">settings</mat-icon>
     </div>
 </div>

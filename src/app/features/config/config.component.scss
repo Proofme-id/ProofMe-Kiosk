@@ -51,19 +51,19 @@
 
     table {
         width: 100%;
-        // table-layout: fixed;
+        table-layout: fixed;
     }
     
     th, td {
         overflow: hidden;
-        width: 200px;
         text-overflow: ellipsis;
         white-space: nowrap;
         padding-left: 0 !important;
     }
 
     mat-tab-group {
-        padding-top: 100px;
+        height: 80vh;
+        width: 100%;
     }
 
     h1 {

@@ -109,3 +109,8 @@ Execute 'snapcraft' to build a kiosk snap.
 ``` bash
 SNAPCRAFT_BUILD_ENVIRONMENT=host snapcraft
 ```
+
+## Get snap from VM
+```bash
+scp -P 2222 didux@localhost:~/build/proofme-kiosk_0.1_arm64.snap ./
+```
