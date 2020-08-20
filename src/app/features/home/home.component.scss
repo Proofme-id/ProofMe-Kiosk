@@ -13,6 +13,10 @@
     background: indianred;
   }
 
+  .video {
+    overflow: hidden;
+  }
+
   fa-icon {
     outline: none;
     opacity: 0.6;
@@ -29,5 +33,11 @@
       font-size: 24px;
     }
     height: 75px;
+  }
+
+  video {
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    align-self: center;
   }
 }

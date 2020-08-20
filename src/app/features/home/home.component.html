@@ -2,12 +2,8 @@
     <h1>{{ 'PAGES.HOME.TITLE' | translate }}</h1>
 </div>
 
-<div class="container" [hidden]="hideVideo">
-<!--    <img src="./assets/images/proofme.ID-white.png">-->
+<div class="container video" [hidden]="hideVideo">
     <video class="video" id="video" autoplay="true" playsinline="true"></video>
-<!--    <h2 class="title">-->
-<!--        {{ 'PAGES.HOME.TITLE2' | translate }}-->
-<!--    </h2>-->
 </div>
 
 <div class="container error" *ngIf="status == 2">
