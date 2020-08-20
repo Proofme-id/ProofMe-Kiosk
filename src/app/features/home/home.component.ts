@@ -22,8 +22,6 @@ export class HomeComponent implements OnInit {
     public video: HTMLVideoElement;
     public hideVideo: Boolean = false;
 
-    width = 400;
-
     constructor(private router: Router) { }
 
     ngOnInit(): void {
@@ -75,8 +73,10 @@ export class HomeComponent implements OnInit {
 
     on_video_ready = () => {
         this.canvas = document.createElement('canvas')
-        this.canvas.width = width
-        this.canvas.height = this.video.videoHeight / (this.video.videoWidth / width)
+        // this.canvas.width = width
+        // this.canvas.height = this.video.videoHeight / (this.video.videoWidth / width)
+        this.canvas.width = this.video.videoWidth / (this.video.videoHeight / (height))
+        this.canvas.height = height;
         this.video.setAttribute('height', this.canvas.height.toString())
         this.video.setAttribute('width', this.canvas.width.toString())
     }
