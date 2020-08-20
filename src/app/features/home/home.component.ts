@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ipcRenderer } from "electron";
 const { width, height } = require("screenz");
 
 @Component({
@@ -30,9 +31,21 @@ export class HomeComponent implements OnInit {
         this.init_camera();
     }
 
+    openDoor(slot) {
+        console.log(ipcRenderer.sendSync('activate', slot))
+
+        setTimeout( () => {
+            ipcRenderer.sendSync('deactivate', slot)
+        }, 5000);
+    }
+
     setStatus(status) {
         this.hideVideo = true;
         this.status = status;
+
+        if (status == 3) {
+            this.openDoor(1)
+        }
 
         setTimeout( () => {
           this.status = 0;
@@ -49,7 +62,6 @@ export class HomeComponent implements OnInit {
     on_error = (reason: any) => { console.log(reason) }
 
     get_media(): Promise<MediaStream> {
-
         let constraints = { audio: false, video: true }
         return navigator.mediaDevices.getUserMedia(constraints)
     }

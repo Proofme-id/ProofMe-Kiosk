@@ -29,7 +29,7 @@ function createWindow() {
         kiosk: (serve) ? false : true,
         webPreferences: {
             nodeIntegration: true,
-            allowRunningInsecureContent: (serve) ? true : false,
+            allowRunningInsecureContent: true,
         },
     });
     if (serve) {
@@ -43,7 +43,7 @@ function createWindow() {
         win.loadURL(url.format({
             pathname: path.join(__dirname, 'dist/index.html'),
             protocol: 'file:',
-            slashes: true
+            slashes: true,
         }));
     }
     // Emitted when the window is closed.

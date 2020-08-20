@@ -14,10 +14,7 @@ function createWindow(): BrowserWindow {
   const electronScreen = screen;
   const display = electronScreen.getPrimaryDisplay();
   const displays = electronScreen.getAllDisplays();
-  console.log("Displays:" + JSON.stringify(displays));
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
-  let width;
-  let height;
 
   console.log("Display: ")
   console.log("Width: " + size.width)
@@ -31,16 +28,18 @@ function createWindow(): BrowserWindow {
     width: size.width,
     height: size.height,
     frame: false,
-    kiosk: (serve) ? false : true,
+    // kiosk: (serve) ? false : true,
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: true,
     },
   });
 
+  win.webContents.openDevTools();
+
   if (serve) {
 
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
 
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/node_modules/electron`)
