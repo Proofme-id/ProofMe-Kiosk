@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>Delete access</h2>
+
+<div mat-dialog-content>
+    <p>Are you sure you want to
+        <b class="grant" *ngIf="!accessManagementUser.access">grant</b>
+        <b class="revoke" *ngIf="accessManagementUser.access">revoke</b>
+        access to this user?</p>
+    <b>{{ accessManagementUser.identifier }}: </b>
+    <b>{{ accessManagementUser.value }}</b>
+</div>
+<br>
+<mat-dialog-actions>
+    <button mat-button class="mat-raised-button" (click)="close()">Close</button>
+    <button *ngIf="!accessManagementUser.access" mat-button class="mat-raised-button mat-success" (click)="save()">Yes,
+        grant</button>
+    <button *ngIf="accessManagementUser.access" mat-button class="mat-raised-button mat-warn" (click)="save()">Yes,
+        revoke</button>
+</mat-dialog-actions>

@@ -6,6 +6,8 @@ import { NodeStorageManager } from './NodeStorageManager';
 import { IKioskProfile } from 'app/interface/kiosk-profile.interface';
 import { IAdmin } from 'app/interface/admin.interface';
 import { IAccessManagement } from 'app/interface/access-management.interface';
+import { IAccessManagementUser } from 'app/interface/access-management-user.interface';
+import { access } from 'fs';
 
 @Injectable()
 export class StorageService {
@@ -70,29 +72,31 @@ export class StorageService {
         return this.storageManager.writeJSON('profile.json', this.currentProfile);
     }
 
-    // async getAccessManagement(): Promise<IAccessManagement> {
-    //     return (await this.storageManager.readJSON<IKioskProfile>('profile.json')).ACCESS_MANAGEMENT
-    // }
+    addAccessManagementUser(accessmanagementUser: IAccessManagementUser) {
+        if (!this.currentProfile || !this.currentProfile.ACCESS_MANAGEMENT || !this.currentProfile.ACCESS_MANAGEMENT.ACCESS_LIST) {
+            this.currentProfile = {
+                ...this.currentProfile,
+                ...{
+                    ACCESS_MANAGEMENT: {
+                        ...this.currentProfile.ACCESS_MANAGEMENT,
+                        ACCESS_LIST: []
+                    }
+                }
+            };
+        }
+        this.currentProfile.ACCESS_MANAGEMENT.ACCESS_LIST.push(accessmanagementUser);
+        return this.storageManager.writeJSON('profile.json', this.currentProfile);
+    }
 
-    // addAccessManagementUser(accessmanagementUser: IAccessManagement) {
-    //     if (!this.currentProfile || !this.currentProfile.ACCESS_MANAGEMENT) {
-    //         this.currentProfile = {
-    //             ...this.currentProfile,
-    //             ...{
-    //                 ACCESS_MANAGEMENT: {
-    //                     ACCESS_LIST: []
-    //                 }
-    //             }
-    //         };
-    //     }
-    //     this.currentProfile.ACCESS_MANAGEMENT.push(accessmanagementUser);
-    //     return this.storageManager.writeJSON('profile.json', this.currentProfile);
-    // }
+    removeAccessManagementUser(accessmanagementUser: IAccessManagementUser) {
+        this.currentProfile.ACCESS_MANAGEMENT.ACCESS_LIST = this.currentProfile.ACCESS_MANAGEMENT.ACCESS_LIST.filter(x => x.value !== accessmanagementUser.value);
+        return this.storageManager.writeJSON('profile.json', this.currentProfile);
+    }
 
-    // removeAccessManagementUser(accessmanagementUser: IAccessManagement) {
-    //     this.currentProfile.ACCESS_MANAGEMENT.ACCESS_LIST = this.currentProfile.ACCESS_MANAGEMENT.ACCESS_LIST.filter(x => x.value !== accessmanagementUser.);
-    //     return this.storageManager.writeJSON('profile.json', this.currentProfile);
-    // }
+    updateAccessManagementUser(accessmanagementUser: IAccessManagementUser) {
+        this.currentProfile.ACCESS_MANAGEMENT.ACCESS_LIST.find(x => x.value === accessmanagementUser.value).access = !accessmanagementUser.access;
+        return this.storageManager.writeJSON('profile.json', this.currentProfile);
+    }
 
     private getStorageBase(): string {
         if (isDevMode()) {

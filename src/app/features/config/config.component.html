@@ -9,14 +9,16 @@
 </div>
 
 <div *ngIf="!loggedIn && connectionSuccess && !showNotAnAdminError" class="container qr-code">
-    <p class="qr-code-text-connected"><b>CONNECTED</b><p>Waiting for app to send data</p>
+    <p class="qr-code-text-connected"><b>CONNECTED</b>
+    <p>Waiting for app to send data</p>
 </div>
 
 <div *ngIf="showNotAnAdminError" class="container qr-code">
-    <p class="qr-code-text-connected"><b class="error">ERROR</b><p>You are not an admin</p>
+    <p class="qr-code-text-connected"><b class="error">ERROR</b>
+    <p>You are not an admin</p>
 </div>
 
-<mat-tab-group *ngIf="loggedIn" backgroundColor="accent" mat-stretch-tabs>
+<mat-tab-group [hidden]="loggedIn" backgroundColor="accent" mat-stretch-tabs>
     <mat-tab label="Access Management">
         <h1 class="title">
             Access management
@@ -31,13 +33,78 @@
             </div>
             <p>Enable face recognition</p>
             <div>
-                <mat-slide-toggle [(ngModel)]="biometricsEnabled" (change)="biometricsChange()">Biometrics</mat-slide-toggle>
+                <mat-slide-toggle [(ngModel)]="biometricsEnabled" (change)="biometricsChange()">Biometrics
+                </mat-slide-toggle>
             </div>
         </div>
         <br>
         <div class="config-div">
             <p>Access list</p>
+            <mat-form-field>
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Access Value" #input>
+            </mat-form-field>
+            <table [hidden]="tableDataSourceAccess.data.length === 0" mat-table [dataSource]="tableDataSourceAccess">
+                <ng-container matColumnDef="identifier">
+                    <th mat-header-cell *matHeaderCellDef>Identifier</th>
+                    <td mat-cell *matCellDef="let access">{{ access.identifier }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="value">
+                    <th mat-header-cell *matHeaderCellDef>Value</th>
+                    <td mat-cell *matCellDef="let access" class="identifierValue">{{ access.value }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="access">
+                    <th mat-header-cell *matHeaderCellDef>Access</th>
+                    <td mat-cell *matCellDef="let access">
+                        <img *ngIf="access.access" class="access-icon" src="/assets/images/success-icon.png">
+                        <img *ngIf="!access.access" class="access-icon" src="/assets/images/failed-icon.png">
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="editAccessAction">
+                    <th mat-header-cell *matHeaderCellDef class="text-right">Edit Access</th>
+                    <td mat-cell *matCellDef="let access">
+                        <mat-icon (click)="editAccess(access)" color="primary" class="edit-icon">edit</mat-icon>
+                </ng-container>
+
+                <ng-container matColumnDef="deleteAction">
+                    <th mat-header-cell *matHeaderCellDef class="text-right">Delete</th>
+                    <td mat-cell *matCellDef="let access">
+                        <mat-icon (click)="removeAccess(access)" color="warn" class="delete-icon">delete</mat-icon>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsAccess"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsAccess;"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No data matching the filter "{{ input.value }}"</td>
+                </tr>
+            </table>
+            <p *ngIf="tableDataSourceAccess.data.length === 0" class="no-access-users-list">
+                No access users
+            </p>
+            <mat-paginator #paginatorAccess [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
+            <div class="add-access-div">
+                <mat-form-field appearance="fill">
+                    <mat-label>Identifier</mat-label>
+                    <mat-select [(value)]="identifierType">
+                        <mat-option *ngFor="let identifier of accessListIdentifier" [value]="identifier.value">
+                            {{ identifier.viewValue }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="add-access-value">
+                    <mat-label>Value</mat-label>
+                    <input matInput placeholder="value" [(ngModel)]="identifierValue">
+                </mat-form-field>
+                <mat-slide-toggle class="add-access-toggle" [(ngModel)]="identifierEnabled">Pre-enabled
+                </mat-slide-toggle>
+            </div>
+            <button mat-button class="mat-raised-button" color="primary" (click)="addAccess()">Add access</button>
         </div>
+        <br>
     </mat-tab>
     <mat-tab label="Admins">
         <h1 class="title">
@@ -65,7 +132,7 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
-            <mat-paginator [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
+            <mat-paginator #paginatorAdmin [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
         </div>
         <h1 class="title">
             Add new admin
@@ -78,7 +145,8 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Admin DID contract address</mat-label>
-                <input matInput placeholder="0x24fF1B8F5A876c8afc12a5615Da84fD5115B0121" [(ngModel)]="adminDidContractAddress">
+                <input matInput placeholder="0x24fF1B8F5A876c8afc12a5615Da84fD5115B0121"
+                    [(ngModel)]="adminDidContractAddress">
             </mat-form-field>
             <button mat-button class="mat-raised-button" color="primary" (click)="addAdmin()">Add admin</button>
         </div>
@@ -90,9 +158,9 @@
             Network
         </h1>
         <div class="config-div">
-                <li *ngFor="let interface of networkInterfaces;">
-                    <b>{{ interface.name }}</b>: {{ interface.address }}
-                </li>
+            <li *ngFor="let interface of networkInterfaces;">
+                <b>{{ interface.name }}</b>: {{ interface.address }}
+            </li>
         </div>
         <h1 class="title">
             Relays
@@ -101,9 +169,11 @@
             <button (click)="getRelays()">Scan devices</button><br><br>
             <span *ngFor="let relay of relays;">
                 <b>Type:</b> {{ relay.product }} <br>
-                <b>Manufacturer:</b> {{ relay.manufacturer }} <br/>
-                <b>Slot 1:</b> <button (click)="switchRelayOn(1)">ON</button> <button (click)="switchRelayOff(1)">OFF</button><br/>
-                <b>Slot 2:</b> <button (click)="switchRelayOn(2)">ON</button> <button (click)="switchRelayOff(2)">OFF</button><br/>
+                <b>Manufacturer:</b> {{ relay.manufacturer }} <br />
+                <b>Slot 1:</b> <button (click)="switchRelayOn(1)">ON</button> <button
+                    (click)="switchRelayOff(1)">OFF</button><br />
+                <b>Slot 2:</b> <button (click)="switchRelayOn(2)">ON</button> <button
+                    (click)="switchRelayOff(2)">OFF</button><br />
             </span>
             <br>
             <span *ngIf="relays.length < 1">
@@ -111,9 +181,9 @@
             </span>
 
         </div>
-<!--        <div class="config-div">-->
-<!--            <p>{{ relays }}</p>-->
-<!--        </div>-->
+        <!--        <div class="config-div">-->
+        <!--            <p>{{ relays }}</p>-->
+        <!--        </div>-->
         <h1 class="title">
             Display
         </h1>
@@ -124,7 +194,8 @@
             Uptime
         </h1>
         <div class="config-div">
-            <p>{{ getUptime() }}</p>
+            <p>{{ uptime }}</p>
         </div>
+        <br>
     </mat-tab>
 </mat-tab-group>

@@ -39,6 +39,8 @@ import { EnrollComponent } from './features/enroll/enroll.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from "@angular/material/select";
+import { DeleteAccessDialogComponent } from './dialogs/delete-access-dialog/delete-access.dialog';
+import { EditAccessDialogComponent } from './dialogs/edit-access-dialog/edit-access.dialog';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -54,7 +56,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         InstallComponent,
         ConfigComponent,
         EnrollComponent,
-        DeleteAdminDialogComponent
+        DeleteAdminDialogComponent,
+        DeleteAccessDialogComponent,
+        EditAccessDialogComponent
     ],
     imports: [
         BrowserModule,

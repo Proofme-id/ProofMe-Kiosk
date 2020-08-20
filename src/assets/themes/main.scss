@@ -65,10 +65,18 @@ $proofme-blue-accent: (
         A700: white,
     )
 );
-
 $my-app-primary: mat-palette($proofme-blue);
 $my-app-accent:  mat-palette($proofme-blue-accent);
 $my-app-warn:    mat-palette($mat-deep-orange);
 $my-app-theme:   mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
 
 @include angular-material-theme($my-app-theme);
+
+.mat-success {
+    background-color: #3b9869;
+    color: white;
+
+    &:hover {
+        background-color: #2d7350;
+    }
+}

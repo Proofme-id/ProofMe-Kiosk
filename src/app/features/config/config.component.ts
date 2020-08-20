@@ -15,6 +15,9 @@ import { Web3Provider } from 'app/providers/web3Provider';
 import * as crypto from 'crypto';
 import * as QRCode from 'qrcode';
 import { IAccessManagement } from 'app/interface/access-management.interface';
+import { IAccessManagementUser } from 'app/interface/access-management-user.interface';
+import { DeleteAccessDialogComponent } from 'app/dialogs/delete-access-dialog/delete-access.dialog';
+import { EditAccessDialogComponent } from 'app/dialogs/edit-access-dialog/edit-access.dialog';
 const { networkInterfaces, uptime } = require('os');
 const { width, height } = require("screenz");
 
@@ -26,14 +29,17 @@ const { width, height } = require("screenz");
 export class ConfigComponent implements OnInit {
     // Admin 
     displayedColumns: string[] = ['publickey', 'didContractAddress', 'deleteAction'];
+    displayedColumnsAccess: string[] = ['identifier', 'value', 'access', 'editAccessAction', 'deleteAction']
     tableDataSource = new MatTableDataSource([]);
+    tableDataSourceAccess = new MatTableDataSource([]);
     loggedIn = false;
     showNotAnAdminError = false;
     uuid: string = null;
     adminPublicKey: string;
     adminDidContractAddress: string;
-    @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-    @ViewChild('qrCodeCanvas', {static: false})
+    @ViewChild('paginatorAdmin', { static: true }) paginatorAdmin: MatPaginator;
+    @ViewChild('paginatorAccess', { static: true }) paginatorAccess: MatPaginator;
+    @ViewChild('qrCodeCanvas', { static: false })
     qrCodeCanvas: ElementRef;
     peerConnection = null;
     wsClient = null;
@@ -54,6 +60,15 @@ export class ConfigComponent implements OnInit {
     // Access management
     emailEnabled = false;
     biometricsEnabled = false;
+    uptime: string;
+    accessListIdentifier = [
+        { value: 'PHONE_NUMBER', viewValue: 'Phone number' },
+        { value: 'EMAIL', viewValue: 'Email' }
+    ]
+    identifierValue: string;
+    identifierEnabled = false;
+    identifierType = this.accessListIdentifier[0].value;
+
     constructor(
         private router: Router,
         private storageService: StorageService,
@@ -67,6 +82,7 @@ export class ConfigComponent implements OnInit {
         this.loggedIn = true;
         this.loadConfigJson();
         this.networkInterfaces = this.getNetworkInterfaces();
+        this.uptime = this.getUptime();
     }
 
     phonenumberEnabled = false;
@@ -74,7 +90,8 @@ export class ConfigComponent implements OnInit {
     accessManagement: IAccessManagement;
 
     async ngOnInit(): Promise<void> {
-        this.tableDataSource.paginator = this.paginator;
+        this.tableDataSource.paginator = this.paginatorAdmin;
+        this.tableDataSourceAccess.paginator = this.paginatorAccess;
         this.uuid = null;
         await this.setupAccessManagement();
         await this.configProvider.getConfig();
@@ -85,22 +102,36 @@ export class ConfigComponent implements OnInit {
         }
     }
 
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.tableDataSourceAccess.filter = filterValue.trim().toLowerCase();
+
+        if (this.tableDataSourceAccess.paginator) {
+            this.tableDataSourceAccess.paginator.firstPage();
+        }
+    }
+
     async setupAccessManagement() {
         this.accessManagement = await this.storageService.getAccessManagement();
-        for (const identifyBy of this.accessManagement.IDENTIFY_BY) {
-            if (identifyBy === 'EMAIL') {
-                this.emailEnabled = true;
-            } else if (identifyBy === 'PHONE_NUMBER') {
-                this.phonenumberEnabled = true;
+        if (this.accessManagement) {
+            if (this.accessManagement.IDENTIFY_BY) {
+                for (const identifyBy of this.accessManagement.IDENTIFY_BY) {
+                    if (identifyBy === 'EMAIL') {
+                        this.emailEnabled = true;
+                    } else if (identifyBy === 'PHONE_NUMBER') {
+                        this.phonenumberEnabled = true;
+                    }
+                }
             }
+            this.biometricsEnabled = this.accessManagement.ENABLE_FACE_RECOGNITION;
+            this.tableDataSourceAccess.data = this.accessManagement.ACCESS_LIST;
         }
-        this.biometricsEnabled = this.accessManagement.ENABLE_FACE_RECOGNITION;
     }
 
     getUptime() {
         const seconds = uptime();
-        var d = Math.floor(seconds / (3600*24));
-        var h = Math.floor(seconds % (3600*24) / 3600);
+        var d = Math.floor(seconds / (3600 * 24));
+        var h = Math.floor(seconds % (3600 * 24) / 3600);
         var m = Math.floor(seconds % 3600 / 60);
         var s = Math.floor(seconds % 60);
 
@@ -151,58 +182,82 @@ export class ConfigComponent implements OnInit {
         });
     }
 
-    async addAdmin() {
-        const trimmedKey = this.adminPublicKey.trim();
-        const trimmedDidKey = this.adminDidContractAddress.trim();
-        console.log('adminPublicKey:', );
-        console.log('this.tableDataSource.data:', this.tableDataSource.data);
-        const hasKey = this.tableDataSource.data.includes(trimmedKey);
-        if (!hasKey) {
-            const web3 = new Web3();
-            const publicKeyIsValidAddress = web3.utils.isAddress(trimmedKey);
-            const didContractIsValidAddress = web3.utils.isAddress(trimmedDidKey);
-            if (publicKeyIsValidAddress && didContractIsValidAddress) {
-                try {
-                    const isOwner = await this.web3Provider.isOwnerOfDidContract(trimmedKey, trimmedDidKey);
-                    if (isOwner) {
-                        await this.storageService.addAdmin({
-                            publicKey: trimmedKey,
-                            didContractAddress: trimmedDidKey
-                        });
-                        this.tableDataSource.data = [...this.tableDataSource.data, { 
-                            publicKey: trimmedKey,
-                            didContractAddress: trimmedDidKey
-                        } as IAdmin];
-                        this.adminPublicKey = null;
-                        this.adminDidContractAddress = null;
-                    } else {
-                        this.snackBar.open(`The publickey ${trimmedKey} is not the owner of the DID contract address ${trimmedDidKey}`, 'Close', {
-                            duration: 6000,
-                            panelClass: 'snackbar'
-                        });
-                    }
-                } catch (error) {
-                    this.snackBar.open(`DID contract on address ${trimmedDidKey} does not exist`, 'Close', {
-                        duration: 6000,
-                        panelClass: 'snackbar'
-                    });
-                }
-            } else if (!publicKeyIsValidAddress) {
-                this.snackBar.open(`Publickey ${trimmedKey} is not a valid public key`, 'Close', {
-                    duration: 3000,
-                    panelClass: 'snackbar'
-                });
-            } else if (!didContractIsValidAddress) {
-                this.snackBar.open(`DID contract address ${didContractIsValidAddress} is not a valid key`, 'Close', {
-                    duration: 3000,
-                    panelClass: 'snackbar'
-                });
+    removeAccess(access: IAccessManagementUser) {
+        console.log('remove:', access);
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.hasBackdrop = true;
+        dialogConfig.data = access;
+        const dialogRef = this.dialog.open(DeleteAccessDialogComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(async result => {
+            if (result.accepted) {
+                await this.storageService.removeAccessManagementUser(access);
+                this.tableDataSourceAccess.data = [...this.tableDataSourceAccess.data.filter(x => x !== access)];
             }
+        });
+    }
+
+    editAccess(access: IAccessManagementUser) {
+        console.log('edit:', access);
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.hasBackdrop = true;
+        dialogConfig.data = access;
+        const dialogRef = this.dialog.open(EditAccessDialogComponent, dialogConfig);
+        dialogRef.afterClosed().subscribe(async result => {
+            if (result.accepted) {
+                await this.storageService.updateAccessManagementUser(access);
+                // this.tableDataSourceAccess.data = [...this.tableDataSourceAccess.data.find(x => x === access).];
+                this.tableDataSourceAccess.data.find(x => x.value === access.value).access = !access.access;
+            }
+        });
+    }
+
+    async addAdmin() {
+        if (!this.adminPublicKey) {
+            this.makeToast(`Please fill in the public key`, 3000);
+        } else if (!this.adminDidContractAddress) {
+            this.makeToast(`Please fill in the DID contract address`, 3000);
         } else {
-            this.snackBar.open(`Publickey ${trimmedKey} is already an admin!`, 'Close', {
-                duration: 3000,
-                panelClass: 'snackbar'
-            });
+            const trimmedKey = this.adminPublicKey.trim();
+            const trimmedDidKey = this.adminDidContractAddress.trim();
+            console.log('adminPublicKey:',);
+            console.log('this.tableDataSource.data:', this.tableDataSource.data);
+            const hasKey = this.tableDataSource.data.filter(x => x.publicKey === trimmedKey).length > 0;
+            if (!hasKey) {
+                const web3 = new Web3();
+                const publicKeyIsValidAddress = web3.utils.isAddress(trimmedKey);
+                const didContractIsValidAddress = web3.utils.isAddress(trimmedDidKey);
+                if (publicKeyIsValidAddress && didContractIsValidAddress) {
+                    try {
+                        const isOwner = await this.web3Provider.isOwnerOfDidContract(trimmedKey, trimmedDidKey);
+                        if (isOwner) {
+                            await this.storageService.addAdmin({
+                                publicKey: trimmedKey,
+                                didContractAddress: trimmedDidKey
+                            });
+                            this.tableDataSource.data = [...this.tableDataSource.data, {
+                                publicKey: trimmedKey,
+                                didContractAddress: trimmedDidKey
+                            } as IAdmin];
+                            this.adminPublicKey = null;
+                            this.adminDidContractAddress = null;
+                        } else {
+                            this.makeToast(`The publickey ${trimmedKey} is not the owner of the DID contract address ${trimmedDidKey}`, 6000);
+                        }
+                    } catch (error) {
+                        this.makeToast(`DID contract on address ${trimmedDidKey} does not exist`, 6000);
+                    }
+                } else if (!publicKeyIsValidAddress) {
+                    this.makeToast(`Publickey ${trimmedKey} is not a valid public key`, 3000);
+                } else if (!didContractIsValidAddress) {
+                    this.makeToast(`DID contract address ${didContractIsValidAddress} is not a valid key`, 3000);
+                }
+            } else {
+                this.makeToast(`Publickey ${trimmedKey} is already an admin!`, 3000);
+            }
         }
     }
 
@@ -239,6 +294,44 @@ export class ConfigComponent implements OnInit {
         return results;
     }
 
+    addAccess() {
+        console.log('Add access');
+        if (!this.identifierValue) {
+            this.makeToast(`Please provide a value`, 3000);
+        } else {
+            const trimmedIdentificationValue = this.identifierValue;
+            const hasKey = this.tableDataSourceAccess.data.filter(x => x.value === trimmedIdentificationValue).length > 0;
+            console.log('trimmedKeyValue:', trimmedIdentificationValue);
+            if (!hasKey) {
+                console.log('identifierValue:', trimmedIdentificationValue);
+                console.log('identifierEnabled:', this.identifierEnabled);
+                console.log('identifierType:', this.identifierType);
+                this.storageService.addAccessManagementUser({
+                    access: this.identifierEnabled,
+                    identifier: this.identifierType,
+                    value: trimmedIdentificationValue
+                });
+                this.tableDataSourceAccess.data = [...this.tableDataSourceAccess.data, {
+                    access: this.identifierEnabled,
+                    identifier: this.identifierType,
+                    value: trimmedIdentificationValue
+                } as IAccessManagementUser];
+                this.identifierEnabled = false;
+                this.identifierValue = null;
+                this.identifierType = this.accessListIdentifier[0].value;
+            } else {
+                this.makeToast(`Identifier ${this.identifierValue} has already been added to the list`, 3000);
+            }
+        }
+    }
+
+    makeToast(message: string, duration: number) {
+        this.snackBar.open(message, 'Close', {
+            duration: duration,
+            panelClass: 'snackbar'
+        });
+    }
+
 
     //////////////////////////////////////////////////
     ///////////////////// WEBRTC ///////////////////// 
@@ -272,11 +365,11 @@ export class ConfigComponent implements OnInit {
     }
 
     generateChallenge(length: number) {
-        var result           = '';
-        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         var charactersLength = characters.length;
-        for ( var i = 0; i < length; i++ ) {
-           result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         return result;
     }
@@ -286,7 +379,7 @@ export class ConfigComponent implements OnInit {
         this.waitingMenu = true;
         this.did = null;
         this.kioskAdminChallenge = this.generateChallenge(64);
-        this.dataChannel.send(JSON.stringify({action: 'login-kiosk-admin', url: this.authUrl, kioskAdminChallenge: this.kioskAdminChallenge}));
+        this.dataChannel.send(JSON.stringify({ action: 'login-kiosk-admin', url: this.authUrl, kioskAdminChallenge: this.kioskAdminChallenge }));
     }
 
     async launchWebsocketClient() {
@@ -321,7 +414,7 @@ export class ConfigComponent implements OnInit {
                     console.log('Websocket onmessage ERROR: Invalid JSON');
                     data = {};
                 }
-                const {type, message, success, host, uuid, offer, answer, candidate} = data;
+                const { type, message, success, host, uuid, offer, answer, candidate } = data;
                 // console.log('================ INCOMING ==========');
                 // console.log('Type: ', type);
                 // console.log('message: ', message);
@@ -422,7 +515,7 @@ export class ConfigComponent implements OnInit {
 
         async function setupHost(wsClient) {
             // Switching from Client to Host
-            wsClient.send(JSON.stringify({type: 'host'}));
+            wsClient.send(JSON.stringify({ type: 'host' }));
         }
 
         async function sendOffer(peerConnection, wsClient) {
@@ -527,7 +620,7 @@ export class ConfigComponent implements OnInit {
                     console.log('ooops', e);
                 }
 
-                ws.send(JSON.stringify({type: 'candidate', candidate: event.candidate}));
+                ws.send(JSON.stringify({ type: 'candidate', candidate: event.candidate }));
             }
         });
 
