@@ -11,11 +11,11 @@ import * as wifi from "node-wifi";
 })
 export class NetworkConfigComponent implements OnInit {
 
-    private panelOpenState = false;
-    private networkConnections = [];
-    private wifiNetworks = [];
-    private showSSID = true;
-    private showPassword = false;
+    panelOpenState = false;
+    networkConnections = [];
+    wifiNetworks = [];
+    showSSID = true;
+    showPassword = false;
 
     // spinnner
     color: ThemePalette = 'primary';
