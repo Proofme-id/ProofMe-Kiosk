@@ -118,8 +118,7 @@ export class InstallComponent implements OnInit {
 
     openNetworkConfig() {
         const dialogRef = this.dialog.open(NetworkConfigComponent, {
-            height: '60vh',
-            width: '80vw',
+            width: "80vw"
         });
         dialogRef.afterClosed().subscribe(result => {
             console.log(`Dialog result: ${result}`);
