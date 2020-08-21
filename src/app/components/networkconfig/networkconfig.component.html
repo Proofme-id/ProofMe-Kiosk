@@ -1,0 +1,67 @@
+<h2 mat-dialog-title>Network configuration</h2>
+
+<mat-accordion>
+    <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Ethernet
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-card *ngFor="let connection of networkConnections;" class="network-card">
+            <mat-card-header>
+                <div mat-card-avatar>
+                    <mat-icon color="primary">network_check</mat-icon>
+                </div>
+                <mat-card-title>Connection {{ connection.name }}</mat-card-title>
+                <mat-card-subtitle>{{ connection.address }}</mat-card-subtitle>
+            </mat-card-header>
+        </mat-card>
+        <mat-progress-spinner
+                *ngIf="showLoader"
+                class="example-margin"
+                [color]="color"
+                [mode]="mode"
+                [value]="value">
+        </mat-progress-spinner>
+        <button *ngIf="!showLoader" class="blue-button" type="button" (click)="getNetworkInterfaces()">REFRESH</button>
+    </mat-expansion-panel>
+    <mat-expansion-panel (opened)="panelOpenState = true"
+                         (closed)="panelOpenState = false">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                WIFI
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div *ngIf="showSSID">
+            <mat-card *ngFor="let connection of wifiNetworks;" class="network-card" (click)="connect(connection.ssid)">
+                <mat-card-header>
+                    <div mat-card-avatar>
+                        <mat-icon color="primary">wifi</mat-icon>
+                    </div>
+                    <mat-card-title>{{ connection.ssid }}</mat-card-title>
+                    <mat-card-subtitle>{{ connection.security_flags }}</mat-card-subtitle>
+                </mat-card-header>
+            </mat-card>
+        </div>
+        <div *ngIf="showPassword">
+            <mat-form-field class="example-form-field">
+                <mat-label>Wifi password</mat-label>
+                <input matInput type="password" [(ngModel)]="PASSWORD">
+            </mat-form-field>
+            <button class="blue-button" type="button" (click)="connectToSSID()">CONNECT</button>
+        </div>
+        <mat-progress-spinner
+                *ngIf="showLoader"
+                class="example-margin"
+                [color]="color"
+                [mode]="mode"
+                [value]="value">
+        </mat-progress-spinner>
+        <mat-icon *ngIf="connectionSuccess" color="primary">check_circle</mat-icon>
+        <mat-icon *ngIf="connectionError" color="warn">error</mat-icon>
+        <button *ngIf="!showLoader" class="blue-button" type="button" (click)="getWifiNetworks()">REFRESH</button>
+    </mat-expansion-panel>
+</mat-accordion>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>
