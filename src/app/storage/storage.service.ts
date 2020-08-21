@@ -35,6 +35,14 @@ export class StorageService {
         );
     }
 
+    resetConfig(): Promise<boolean> {
+        return this.storageManager.remove('profile.json').then(() => {
+            return true;
+        }).catch(() => {
+            return false;
+        });
+    }
+
     async getAdmins(): Promise<IAdmin[]> {
         return (await this.storageManager.readJSON<IKioskProfile>('profile.json')).ADMINS
     }

@@ -206,6 +206,22 @@ html, body {
   text-align: right;
 }
 
+.red-button {
+  display: block;
+  width: 30vw;
+  height: 6vh;
+  background: #ed3330;
+  border: none;
+  color: #fff;
+  font-size: 2vh;
+  font-weight: bold;
+  margin: 2vh;
+
+  -webkit-border-radius: 1vh;
+  -moz-border-radius: 1vh;
+  border-radius: 1vh;
+}
+
 .blue-button {
   display: block;
   width: 30vw;

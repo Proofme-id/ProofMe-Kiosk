@@ -649,4 +649,15 @@ export class ConfigComponent implements OnInit {
             }]
         };
     }
+
+    resetKiosk() {
+        // remove config and restart
+        this.storageService.resetConfig().then((result) => {
+          if (result) {
+              this.router.navigate(['install']);
+          } else {
+              console.log('Could not delete config');
+          }
+        })
+    }
 }
