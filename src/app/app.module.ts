@@ -41,6 +41,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from "@angular/material/select";
 import { DeleteAccessDialogComponent } from './dialogs/delete-access-dialog/delete-access.dialog';
 import { EditAccessDialogComponent } from './dialogs/edit-access-dialog/edit-access.dialog';
+import {MatCardModule} from "@angular/material/card";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -88,7 +90,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
                 deps: [HttpClient]
             }
         }),
-        MatSelectModule
+        MatSelectModule,
+        MatCardModule,
+        MatExpansionModule
     ],
     providers: [
         StorageService,

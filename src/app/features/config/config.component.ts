@@ -1,11 +1,10 @@
 import { ipcRenderer } from 'electron';
-import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, NgZone } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfigProvider } from 'app/providers/configProvider';
 import { StorageService } from 'app/storage/storage.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DeleteAdminDialogComponent } from 'app/dialogs/delete-admin-dialog/delete-admin.dialog';
-import { BehaviorSubject } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Web3 from '@smilo-platform/web3';
 import { MatPaginator } from '@angular/material/paginator';
@@ -18,8 +17,8 @@ import { IAccessManagement } from 'app/interface/access-management.interface';
 import { IAccessManagementUser } from 'app/interface/access-management-user.interface';
 import { DeleteAccessDialogComponent } from 'app/dialogs/delete-access-dialog/delete-access.dialog';
 import { EditAccessDialogComponent } from 'app/dialogs/edit-access-dialog/edit-access.dialog';
-const { networkInterfaces, uptime } = require('os');
-const { width, height } = require("screenz");
+import { networkInterfaces, uptime } from "os";
+import { width, height } from "screenz";
 
 @Component({
     selector: 'app-config',
@@ -650,5 +649,16 @@ export class ConfigComponent implements OnInit {
                 username
             }]
         };
+    }
+
+    resetKiosk() {
+        // remove config and restart
+        this.storageService.resetConfig().then((result) => {
+          if (result) {
+              this.router.navigate(['install']);
+          } else {
+              console.log('Could not delete config');
+          }
+        })
     }
 }

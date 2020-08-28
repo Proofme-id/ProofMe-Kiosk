@@ -64,6 +64,25 @@
         </h1>
     </div>
     <div class="center-div">
+        <mat-card *ngFor="let connection of networkConnections;" class="network-card" (click)="openNetworkConfig()">
+            <mat-card-header>
+                <div mat-card-avatar>
+                    <mat-icon color="primary">network_check</mat-icon>
+                </div>
+                <mat-card-title>Connection {{ connection.name }}</mat-card-title>
+                <mat-card-subtitle>{{ connection.address }}</mat-card-subtitle>
+            </mat-card-header>
+        </mat-card>
+        <mat-card *ngIf="networkConnections.length < 1" class="network-card" (click)="openNetworkConfig()">
+            <mat-card-header>
+                <div mat-card-avatar>
+                    <mat-icon color="warn">network_check</mat-icon>
+                </div>
+                <mat-card-title>No connection available.</mat-card-title>
+                <mat-card-subtitle>Setup internet connection</mat-card-subtitle>
+            </mat-card-header>
+        </mat-card>
+
     </div>
     <div class="bottom-div">
     </div>
@@ -123,6 +142,6 @@
     </div>
 
     <div class="bottom-right-div">
-        <button *ngIf="next != null" class="blue-button" type="button" (click)="setScreen(next)">{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }}</button>
+        <button *ngIf="next != null" class="blue-button" type="button" (click)="setScreen(next)" [disabled]="disableNextButton">{{ 'PAGES.INSTALL.NEXT_BUTTON' | translate }}</button>
     </div>
 </div>

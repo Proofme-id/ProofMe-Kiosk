@@ -5,7 +5,10 @@ import * as QRCode from 'qrcode';
 import * as crypto from 'crypto';
 import { ConfigProvider } from 'app/providers/configProvider';
 import { Web3Provider } from 'app/providers/web3Provider';
-const { width, height } = require("screenz");
+import { networkInterfaces } from "os";
+import { width, height } from "screenz";
+import { MatDialog } from '@angular/material/dialog';
+import { NetworkConfigComponent } from "app/components/networkconfig/networkconfig.component";
 
 interface Timezone {
     value: string;
@@ -27,11 +30,13 @@ export class InstallComponent implements OnInit {
     screen: string = "welcome";
     next: string = "selectTimezone";
     prev: string = null;
+    disableNextButton: Boolean = false;
 
     // config  parameters
-    selectedTimezone: string;
-    selectedLanguage: string;
-    selectedKioskType: string;
+    selectedTimezone: string = "NL";
+    selectedLanguage: string = "NL";
+    networkConnections = [];
+    selectedKioskType: string = "ACCESS_MANAGEMENT";
 
     @ViewChild('qrCodeCanvas', {static: false})
     qrCodeCanvas: ElementRef;
@@ -53,7 +58,8 @@ export class InstallComponent implements OnInit {
         private storageService: StorageService,
         private ngZone: NgZone,
         private configProvider: ConfigProvider,
-        private web3Provider: Web3Provider
+        private web3Provider: Web3Provider,
+        private dialog: MatDialog
     ) {
         if (width > height) {
             this.qrCodeWidth = height / 2;
@@ -65,14 +71,6 @@ export class InstallComponent implements OnInit {
 
     timezones: Timezone[] = [
         {value: 'US', viewValue: 'United States'},
-        {value: 'NL', viewValue: 'Netherlands'},
-        {value: 'NL', viewValue: 'Netherlands'},
-        {value: 'NL', viewValue: 'Netherlands'},
-        {value: 'NL', viewValue: 'Netherlands'},
-        {value: 'NL', viewValue: 'Netherlands'},
-        {value: 'NL', viewValue: 'Netherlands'},
-        {value: 'NL', viewValue: 'Netherlands'},
-        {value: 'NL', viewValue: 'Netherlands'},
         {value: 'NL', viewValue: 'Netherlands'}
     ];
 
@@ -86,7 +84,6 @@ export class InstallComponent implements OnInit {
         await this.configProvider.getConfig();
         this.authUrl = this.configProvider.getAuthUrl();
         this.signalingWS = this.configProvider.getSignalingWS();
-        this.launchWebsocketClient();
     }
 
     setScreen(screen: string) {
@@ -100,19 +97,52 @@ export class InstallComponent implements OnInit {
         } else if (screen == 'selectLanguage') {
             this.next = 'selectInternet';
             this.prev = 'selectTimezone';
+            this.disableNextButton = false;
         } else if (screen == 'selectInternet') {
             this.next = 'selectType';
             this.prev = 'selectLanguage';
+            this.disableNextButton = true;
+            this.networkConnections = this.getNetworkInterfaces();
         } else if (screen == 'selectType') {
             this.next = 'addAdmin';
             this.prev = 'selectInternet';
         } else if (screen == 'addAdmin') {
             this.next = null;
             this.prev = 'selectType';
+            this.launchWebsocketClient();
         } else {
             this.next = null;
             this.prev = null;
         }
+    }
+
+    openNetworkConfig() {
+        const dialogRef = this.dialog.open(NetworkConfigComponent, {
+            width: "80vw"
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(`Dialog result: ${result}`);
+            this.networkConnections = this.getNetworkInterfaces();
+        });
+    }
+
+    getNetworkInterfaces() {
+        const nets = networkInterfaces();
+        const results = []; // or just '{}', an empty object
+
+        for (const name of Object.keys(nets)) {
+            for (const net of nets[name]) {
+                // skip over non-ipv4 and internal (i.e. 127.0.0.1) addresses
+                if (net.family === 'IPv4' && !net.internal) {
+                    results.push({ name: name, address: net.address });
+                }
+            }
+        }
+        console.log("Network Interfaces:" + JSON.stringify(results));
+        if (results.length > 0) {
+            this.disableNextButton = false;
+        }
+        return results;
     }
 
     async generateQRCode(uuid: string) {

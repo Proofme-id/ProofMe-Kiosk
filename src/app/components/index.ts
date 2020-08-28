@@ -1,5 +1,5 @@
-// import {FooterComponent} from "./footer/footer.component";
+import {NetworkConfigComponent} from "./networkconfig/networkconfig.component";
 
 export const COMPONENTS = [
-    // FooterComponent
+    NetworkConfigComponent
 ];
