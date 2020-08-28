@@ -79,8 +79,9 @@ export class ConfigComponent implements OnInit {
         private ngZone: NgZone
     ) {
         // For debugging only!! Enable this to skip admin login
-        this.loggedIn = true;
-        this.loadConfigJson();
+        // this.loggedIn = true;
+        // this.loadConfigJson();
+        
         this.networkInterfaces = this.getNetworkInterfaces();
         this.uptime = this.getUptime();
     }
@@ -379,7 +380,7 @@ export class ConfigComponent implements OnInit {
         this.waitingMenu = true;
         this.did = null;
         this.kioskAdminChallenge = this.generateChallenge(64);
-        this.dataChannel.send(JSON.stringify({ action: 'login-kiosk-admin', url: this.authUrl, kioskAdminChallenge: this.kioskAdminChallenge }));
+        this.dataChannel.send(JSON.stringify({ action: 'login-kiosk-admin', kioskAdminChallenge: this.kioskAdminChallenge, request: { by: 'Proofme.ID Kiosk', description: 'Proofme.ID Kiosk' } }));
     }
 
     async launchWebsocketClient() {

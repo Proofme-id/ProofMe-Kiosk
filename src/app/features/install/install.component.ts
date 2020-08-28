@@ -383,7 +383,7 @@ export class InstallComponent implements OnInit {
         this.waitingMenu = true;
         this.did = null;
         this.kioskAdminChallenge = this.generateChallenge(64);
-        this.dataChannel.send(JSON.stringify({action: 'share-kiosk-data', url: this.authUrl, kioskAdminChallenge: this.kioskAdminChallenge}));
+        this.dataChannel.send(JSON.stringify({action: 'share-kiosk-data', request: { by: 'Proofme.ID Kiosk', description: 'Proofme.ID Kiosk' }, kioskAdminChallenge: this.kioskAdminChallenge}));
         this.setScreen('addAdmin');
     }
 
